@@ -10,8 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -32,8 +30,8 @@ class ProjectControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                    "name": "aquaponic_test_name",
-                                    "description": "aquaponic_test_description"
+                                    "projectName": "aquaponic_test_name",
+                                    "shortDescription": "aquaponic_test_description"
                                 }
                                 """))
                 .andExpect(status().isCreated())
@@ -46,9 +44,9 @@ class ProjectControllerTest {
 //                .andExpect(status().isOk())
 //                .andExpect(content().json("""
 //                    [{
-//                        "id": "<id>",
-//                        "name": "aquaponic_test_name",
-//                        "description": "aquaponic_test_description"
+//                        "projectId": "<id>",
+//                        "projectName": "aquaponic_test_name",
+//                        "shortDescription": "aquaponic_test_description"
 //                    }]
 //                    """.replace("<id>", project.id().toString())));
 

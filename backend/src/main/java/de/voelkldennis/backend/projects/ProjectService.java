@@ -13,8 +13,8 @@ public class ProjectService {
     private final ProjectRepo projectRepo;
 
     public Project addNewProject( NewProjectDTO newProjectDTO) {
-        UUID id = projectUtils.generateUUID();
-        Project saveProject = new Project(id, newProjectDTO.name(), newProjectDTO.description());
+        UUID projectId = projectUtils.generateUUID();
+        Project saveProject = new Project(projectId, newProjectDTO.projectName(), newProjectDTO.shortDescription());
         return projectRepo.save(saveProject);
     }
 }
