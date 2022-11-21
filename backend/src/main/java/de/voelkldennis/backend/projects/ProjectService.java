@@ -9,9 +9,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProjectService {
 
-    private final ProjectRepo projectRepo;
-
     private final ProjectUtils projectUtils;
+    private final ProjectRepo projectRepo;
 
     public Project addNewProject( NewProjectDTO newProjectDTO) {
         UUID id = projectUtils.generateUUID();
