@@ -17,10 +17,10 @@ class ProjectServiceTest {
     void addNewProject() {
         //given
         UUID uuid = UUID.fromString("add4ee6b-a702-4553-a0b0-2c07724b5b8b");
-        String name = "aquaponic_test_name";
-        String description = "aquaponic_test_description";
-        Project projectWithId = new Project(uuid, name, description);
-        NewProjectDTO newProjectDTO = new NewProjectDTO(name, description);
+        String projectName = "aquaponic_test_name";
+        String shortDescription = "aquaponic_test_description";
+        Project projectWithId = new Project(uuid, projectName, shortDescription);
+        NewProjectDTO newProjectDTO = new NewProjectDTO(projectName, shortDescription);
         //when
         when(projectUtils.generateUUID()).thenReturn(uuid);
         when(projectRepo.save(projectWithId)).thenReturn(projectWithId);
