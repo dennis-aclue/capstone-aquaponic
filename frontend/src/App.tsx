@@ -1,62 +1,22 @@
-import React, {FormEvent} from 'react';
-import axios from "axios";
+import React from 'react';
+import {Route, Routes} from "react-router";
+import {BrowserRouter} from "react-router-dom";
+import About from "./pages/About";
+import HomePage from "./pages/Homes";
+import Projects from "./pages/Projects";
 
 export default function App() {
-
-    const [newProject, setNewProject] = React.useState(
-        {
-            shortDescription: "",
-            projectName: ""
-        }
-    );
-
-    const baseUrl = '/api/projects/';
-
-    const postNewProject = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        axios.post(baseUrl, newProject)
-            .then(function (response) {
-                console.log(response)
-            })
-            .catch((e) => console.log("POST ERROR: " + e))
-        setNewProject({projectName: "", shortDescription: ""});
-    }
-
-    function handleChange(event: any) {
-        setNewProject({
-            ...newProject,
-            [event.target.name]: event.target.value
-        })
-    }
-
     return <>
         <h1>Welcome everybody!</h1>
-        <form onSubmit={postNewProject}>
-            <h3>Please insert your project name and description</h3>
-            <br/>
-            <label>
-                Project name:
-                <input type="text"
-                       id="projectName"
-                       name="projectName"
-                       value={newProject.projectName}
-                       onChange={handleChange}
-                       placeholder="project name"
-                />
-            </label>
-            <br/>
-            <label>
-                Short project description:
-                <input type="text"
-                       id="projectDescription"
-                       name="shortDescription"
-                       value={newProject.shortDescription}
-                       onChange={handleChange}
-                       placeholder="project description"
-                />
-                <br/><br/>
-            </label>
-            <button>add new project</button>
-        </form>
-    </>
+        <main>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="projects" element={<Projects />} />
+                    <Route path="about" element={<About />} />
+                </Routes>
+            </BrowserRouter>
+        </main>
+        <footer></footer>
+    </>;
 }
