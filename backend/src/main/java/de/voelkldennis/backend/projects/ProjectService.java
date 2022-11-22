@@ -14,7 +14,7 @@ public class ProjectService {
 
     public Project addNewProject( NewProjectDTO newProjectDTO) {
         UUID projectId = projectUtils.generateUUID();
-        Project saveProject = new Project(projectId, newProjectDTO.projectName(), newProjectDTO.shortDescription());
+        Project saveProject = new Project(projectId, newProjectDTO.projectName(), newProjectDTO.shortDescription(), newProjectDTO.projectVisibility(false));
         return projectRepo.save(saveProject);
     }
 

@@ -1,6 +1,5 @@
 package de.voelkldennis.backend.projects;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -19,14 +19,11 @@ class ProjectControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @DirtiesContext
     @Test
     void addNewProjectReturnIsOk() throws Exception {
         //given & when
-        String content = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -34,10 +31,15 @@ class ProjectControllerTest {
                                     "shortDescription": "aquaponic_test_description"
                                 }
                                 """))
-                .andExpect(status().isCreated())
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(status().is(201));
+    }
 
-        Project project = objectMapper.readValue(content, Project.class);
-
+    @DirtiesContext
+    @Test
+    void getAllProjects() throws Exception {
+        //given&when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
 }
