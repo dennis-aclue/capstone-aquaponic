@@ -47,6 +47,7 @@ a:link, a:visited {
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  border: 1px solid var(--color-button-border);
 }
 
 a:hover, a:active {

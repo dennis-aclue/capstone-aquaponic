@@ -459,12 +459,12 @@
       "locked": false,
       "fontSize": 16,
       "fontFamily": 1,
-      "text": "About other Projects",
+      "text": "About other ProjectOverview",
       "baseline": 14,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "O4CiNetleIFPFZ7Z9vEB9",
-      "originalText": "About other Projects"
+      "originalText": "About other ProjectOverview"
     },
     {
       "type": "ellipse",
@@ -2418,12 +2418,12 @@
       "locked": false,
       "fontSize": 20,
       "fontFamily": 1,
-      "text": "Add Garden Projects",
+      "text": "Add Garden ProjectOverview",
       "baseline": 18,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "3xX0QyPPKj_Qj8sflh2Ps",
-      "originalText": "Add Garden Projects"
+      "originalText": "Add Garden ProjectOverview"
     },
     {
       "type": "arrow",
@@ -3157,12 +3157,12 @@
       "locked": false,
       "fontSize": 20,
       "fontFamily": 1,
-      "text": "Own Projects",
+      "text": "Own ProjectOverview",
       "baseline": 18,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "3VaRlyhXqD5uW9goZj6OS",
-      "originalText": "Own Projects"
+      "originalText": "Own ProjectOverview"
     },
     {
       "type": "arrow",
@@ -7346,12 +7346,12 @@
       "locked": false,
       "fontSize": 20,
       "fontFamily": 1,
-      "text": "Projects",
+      "text": "ProjectOverview",
       "baseline": 18,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "kIaEtVqsvKU3HiNLXsWdE",
-      "originalText": "Projects"
+      "originalText": "ProjectOverview"
     },
     {
       "type": "arrow",
