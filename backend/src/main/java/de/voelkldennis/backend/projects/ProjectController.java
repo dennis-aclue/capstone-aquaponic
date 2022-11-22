@@ -1,5 +1,5 @@
 package de.voelkldennis.backend.projects;
-
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,5 +19,9 @@ public class ProjectController {
         return projectService.addNewProject(newProjectDTO);
     }
 
+    @GetMapping
+    List<Project> getAllProjects() {
+        return projectService.getAllProjects();
+    }
 
 }
