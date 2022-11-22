@@ -59,7 +59,7 @@ export default function Projects() {
             </label>
             <button>add new project</button>
         </form>
-        <Link to="/about">Go to the about page</Link><br />
-        <Link to="/">Go to the home page</Link><br />
+        <Link to="/about">Go to the about page</Link>
+        <Link to="/">Go to the home page</Link>
     </>
 }
