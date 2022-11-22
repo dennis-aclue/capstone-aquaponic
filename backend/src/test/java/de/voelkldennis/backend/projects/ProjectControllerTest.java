@@ -39,16 +39,5 @@ class ProjectControllerTest {
 
         Project project = objectMapper.readValue(content, Project.class);
 
-        //then
-//        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json("""
-//                    [{
-//                        "projectId": "<id>",
-//                        "projectName": "aquaponic_test_name",
-//                        "shortDescription": "aquaponic_test_description"
-//                    }]
-//                    """.replace("<id>", project.id().toString())));
-
     }
 }
