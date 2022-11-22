@@ -1,8 +1,10 @@
 import React from 'react';
 import {Route, Routes} from "react-router";
-import About from "./pages/About";
 import HomePage from "./pages/Homes";
-import Projects from "./pages/Projects";
+import MemberOverview from "./pages/MemberOverview";
+import About from "./pages/About";
+import ProjectOverview from "./pages/ProjectOverview";
+import AddProject from "./pages/AddProject";
 
 export default function App() {
     return <>
@@ -10,10 +12,12 @@ export default function App() {
         <main>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="projects" element={<Projects />} />
-                    <Route path="about" element={<About />} />
+                    <Route path="/member" element={<MemberOverview />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/projectOverview" element={<ProjectOverview />} />
+                    <Route path="/addProject" element={<AddProject />} />
                 </Routes>
         </main>
-        <footer></footer>
+        <footer>Aquaponic footer</footer>
     </>;
 }
