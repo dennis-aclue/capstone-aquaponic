@@ -17,6 +17,7 @@
         <java.version>19</java.version>
         <sonar.organization>dennis-aclue</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.exclusions>**/BackendApplication*.java</sonar.exclusions>
     </properties>
     <dependencies>
         <dependency>
