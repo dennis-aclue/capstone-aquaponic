@@ -1,6 +1,6 @@
-import React, {FormEvent} from 'react';
+import React, {FormEvent, useState} from 'react';
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export default function Projects() {
 
@@ -12,14 +12,29 @@ export default function Projects() {
     );
 
     const baseUrl = '/api/projects/';
+    const [messageStatus, setMessageStatus] = useState('')
+    const navigate = useNavigate();
+    const [buttonText, setButtonText] = useState('add new project');
+    const [isLoading,setIsLoading]= React.useState(false);
+
+    const setBackHome = () => {
+        navigate("/")
+    }
 
     const postNewProject = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         axios.post(baseUrl, newProject)
             .then(function (response) {
+                setButtonText('saving in progress');
+                setIsLoading(true)
                 console.log(response)
+                if (response.status === 200 || response.status === 201 )  {
+                    setMessageStatus(' New Project ' + newProject.projectName + ', successfully created.');
+                }
             })
+            .then(() => setTimeout(() => setBackHome(), 4000))
             .catch((e) => console.log("POST ERROR: " + e))
+
         setNewProject({projectName: "", shortDescription: ""});
     }
 
@@ -57,7 +72,8 @@ export default function Projects() {
                 />
                 <br/><br/>
             </label>
-            <button>add new project</button>
+            <button disabled={isLoading}>{buttonText}</button>
+            {messageStatus && <p>{messageStatus}</p>}
         </form>
         <Link to="/about">Go to the about page</Link>
         <Link to="/">Go to the home page</Link>
