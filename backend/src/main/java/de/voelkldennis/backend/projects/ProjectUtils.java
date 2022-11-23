@@ -6,8 +6,9 @@ import java.util.UUID;
 @Component
 public class ProjectUtils {
 
-    public UUID generateUUID() {
-        return UUID.randomUUID();
+    public String generateUUID() {
+        UUID randomId = UUID.randomUUID();
+        return randomId.toString();
     }
 
 }

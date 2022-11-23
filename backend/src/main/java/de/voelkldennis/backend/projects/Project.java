@@ -1,10 +1,9 @@
 package de.voelkldennis.backend.projects;
 
-import java.util.UUID;
-
-public record Project(UUID projectId,
+public record Project(String projectId,
                       String projectName,
                       String shortDescription,
                       Boolean projectVisibility)
 {
 }
+
