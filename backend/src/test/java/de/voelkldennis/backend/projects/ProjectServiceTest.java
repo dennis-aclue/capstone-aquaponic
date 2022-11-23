@@ -2,7 +2,7 @@ package de.voelkldennis.backend.projects;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,17 +14,18 @@ class ProjectServiceTest {
     ProjectRepo projectRepo = mock(ProjectRepo.class);
     ProjectService projectService = new ProjectService(projectUtils, projectRepo);
 
+
     @Test
     void addNewProject() {
         //given
-        UUID uuid = UUID.fromString("add4ee6b-a702-4553-a0b0-2c07724b5b8b");
+        String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
         String projectName = "aquaponic_test_name";
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
-        Project projectWithId = new Project(uuid, projectName, shortDescription, projectVisibility);
+        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
         NewProjectDTO newProjectDTO = new NewProjectDTO(projectName, shortDescription, projectVisibility);
         //when
-        when(projectUtils.generateUUID()).thenReturn(uuid);
+        when(projectUtils.generateUUID()).thenReturn(projectId);
         when(projectRepo.save(projectWithId)).thenReturn(projectWithId);
         Project actual = projectService.addNewProject(newProjectDTO);
         //then
@@ -41,5 +42,22 @@ class ProjectServiceTest {
         List<Project> actual = projectService.getAllProjects();
         //then
         assertEquals(testProject, actual);
+    }
+
+    @Test
+    void getProjectWithId() {
+        //given
+        String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
+        String projectName = "aquaponic_test_name";
+        String shortDescription = "aquaponic_test_description";
+        Boolean projectVisibility = false;
+        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        //when
+        when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.of(projectWithId));
+        Optional<Project> actual = projectService.getProjectWithId(projectId);
+        Optional<Project> expected = Optional.of(projectWithId);
+        //then
+        verify(projectRepo).findByProjectId(projectId);
+        assertEquals(expected,actual);
     }
 }
