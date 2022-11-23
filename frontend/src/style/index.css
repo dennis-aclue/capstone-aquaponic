@@ -29,7 +29,7 @@ input[type=text] {
 }
 
 button {
-  background-color: var(--color-button-background); /* Green */
+  background-color: var(--color-button-background);
   color: var(--color-text);
   padding: 15px 32px;
   text-align: center;
