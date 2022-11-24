@@ -26,33 +26,12 @@ export default function ProjectOverview() {
     return <>
         <h2>Project Overview</h2>
         <section>
-                 <ol>{projects.map((projects: any) => <Link to={`/projectCard/${projects.projectId}`}
+                 <ol>{projects.map((projects: any) => <Link to={"/projectCard/" + projects.projectId}
                                                        state={{
                                                            projectId: projects.projectId
                                                        }}>
-                <li key={projects.projectName}>{projects.projectName}</li>
+                <li key={projects.projectId}>{projects.projectName}</li>
                  </Link>)}</ol>
-
-            {/*{projects &&
-                projects.map((projects: any) => (
-                //single user card
-                <div className="project__card" key={projects.projectName}>
-                    <Link to={`/projectCard/${projects.projectId}`}>
-                        <p>
-                            Project name:
-                            <span className="normal"> {projects.projectName}</span>
-                        </p>
-                    </Link>
-                </div>
-            ))}*/}
-
-            {/*     <ol>{projects.map((projects: any) => <Link to={"/projectCard/" + projects.projectId}
-                                                       state={{
-                                                           from: "exampleProject",
-                                                           projectName: projects.projectName
-                                                       }}>
-                <li key={projects.projectName}>{projects.projectName}</li>
-            </Link>)}</ol>*/}
         </section>
 
         <button onClick={() => navigate("/addProject")}>add new project</button>

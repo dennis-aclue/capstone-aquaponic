@@ -7,33 +7,37 @@ const ProjectCard = () => {
 
     const [project, setProject] = useState([]);
 
+    const [projectData, setProjectData] = React.useState({
+        shortDescription: "",
+        projectName: "",
+        projectId: "",
+    })
+
     useEffect(() => {
-        const singleProjectUrl = `/api/projectCard/${params.projectId}`
+        const singleProjectUrl = `/api/projects/projectCard/${params.projectId}`
         console.log("SingleProjectURL: " + singleProjectUrl)
         console.log("Params: " + params.id)
         axios.get(singleProjectUrl)
             .then((response) => {
                 setProject(response.data)
+                setProjectData(response.data)
             })
             .catch((error) => console.log("Get project with projectId ERROR: " + error))
     }, [params])
 
+
     return <>
-        <h2>Project Nr: {}</h2>
+        <h2>Project Nr: {projectData.projectId}</h2>
         {project && (
-            <div
+            <section
                 className='project__card'>
                 <p>
-                    Project name:
-                    <span className='normal'>
-						</span>
+                    Project name: {projectData.projectName}
                 </p>
                 <p>
-                    Short project description:
-                    <span className='normal'>
-						</span>
+                    Short project description: {projectData.shortDescription}
                 </p>
-            </div>
+            </section>
         )}
         <nav>
             <Link to="/projectOverview">Navigate to project overview</Link>
