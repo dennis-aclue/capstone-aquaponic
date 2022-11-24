@@ -1,0 +1,27 @@
+.projectCard {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+.projectCard__element {
+    width: 250px;
+    height: auto;
+}
+
+.projectCard__Element--Highlight {
+    border: #919196 solid 1px;
+}
+
+.active {
+    background-color: #919196;
+}
+
+a:link, a:visited {
+    color: #919196;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+}

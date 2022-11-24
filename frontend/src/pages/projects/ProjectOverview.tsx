@@ -1,13 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
-import React from "react"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react"
 import axios from "axios";
-
+import '../../style/projects/projectOverview.css'
 
 export default function ProjectOverview() {
 
     const navigate = useNavigate();
-    const baseUrl = '/api/projects/';
+    const projectsUrl = '/api/projects/';
 
     useEffect(() => {
         getAllProjects()
@@ -16,27 +15,31 @@ export default function ProjectOverview() {
     const [projects, setProjects] = useState([]);
 
     const getAllProjects = () => {
-        axios.get(baseUrl)
+        axios.get(projectsUrl)
             .then((response) => {
                 setProjects(response.data)
             })
             .catch((error) => console.log("Get all projects ERROR: " + error))
     }
 
-    return <>
-        <h2>Project Overview</h2>
+    return <div className="flexColumnCenter">
+        <header className="headerStandardStyle">
+            <h1>Project Overview</h1>
+        </header>
+        <nav className="navbar">
+            <Link to="/">Home</Link>
+        </nav>
         <section>
-                 <ol>{projects.map((projects: any) => <Link to={"/projectCard/" + projects.projectId}
-                                                       state={{
-                                                           projectId: projects.projectId
-                                                       }}>
-                <li key={projects.projectId}>{projects.projectName}</li>
-                 </Link>)}</ol>
+            <ul className="projectCard">{projects.map((projects: any) => <Link
+                to={"/projectCard/" + projects.projectId}>
+                <li className="projectCard__element projectCard__Element--Highlight" key={projects.projectId}>
+                    <h4>Project
+                        name: {projects.projectName}</h4>
+                    <p>{projects.shortDescription.substring(0, 20)}...</p></li>
+            </Link>)}</ul>
         </section>
 
         <button onClick={() => navigate("/addProject")}>add new project</button>
-        <Link to="/">Go to the home page</Link>
-        <Link to="/about">Go to the about page</Link>
-        <Link to="/member">Go to your member side</Link>
-    </>
+
+    </div>
 }

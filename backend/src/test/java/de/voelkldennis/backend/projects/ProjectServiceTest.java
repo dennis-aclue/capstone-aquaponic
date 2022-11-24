@@ -2,10 +2,11 @@ package de.voelkldennis.backend.projects;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ProjectServiceTest {
@@ -60,4 +61,5 @@ class ProjectServiceTest {
         verify(projectRepo).findByProjectId(projectId);
         assertEquals(expected,actual);
     }
+
 }
