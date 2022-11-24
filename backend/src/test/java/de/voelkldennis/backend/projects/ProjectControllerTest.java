@@ -9,8 +9,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -36,10 +36,20 @@ class ProjectControllerTest {
 
     @DirtiesContext
     @Test
-    void getAllProjects() throws Exception {
+    void getAllProjectsAndReturnOk() throws Exception {
         //given&when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/projects"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
+    }
+
+    @DirtiesContext
+    @Test
+    void getProjectWithIdAndReturnOk() throws Exception {
+        //given
+        String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectCard/" + projectId))
+                .andExpect(status().is(200));
     }
 }

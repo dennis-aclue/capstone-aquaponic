@@ -1,55 +1,79 @@
 body {
-  margin: 8px;
-  padding: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    align-self: center;
+    justify-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: 100%;
+    height: 100%;
+}
 
-  --color-lightgrey: rgb(111, 104, 104);
-  --color-black: rgba(0, 0, 0, 1);
-  --color-text: #000000;
-  --color-button-background: #638e93;
-  --color-button-hover: #919196;
-  --color-button-active: rgba(47, 55, 82, 0.48);
-  --color-button-border: #717373;
+h4 {
+    padding: 5px;
+}
+
+.flexColumnCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.headerStandardStyle {
+    display: flex;
+    justify-content: center;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
-input[type=text] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-}
-
 button {
-  background-color: var(--color-button-background);
-  color: var(--color-text);
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 1pc;
-  border: 2px solid var(--color-button-border);
+    width: 20vw;
+    align-self: center;
+    background-color: #638e93;
+    color: white;
+    text-align: center;
+    padding: 10px 24px;
 }
 
-a:link, a:visited {
-  /*background-color: var(--color-button-background);*/
-  color: var(--color-text);
-  padding: 14px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border: 1px solid var(--color-button-border);
+.navbar {
+    min-width: 80vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border-bottom: #919196 solid 1px;
 }
 
-a:hover, a:active {
-  background-color: var(--color-button-hover);
+/* Style the links inside the navigation bar */
+.navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
 }
+
+/* Change the color of links on hover */
+.navbar a:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.navbar a.active {
+    color: white;
+}
+

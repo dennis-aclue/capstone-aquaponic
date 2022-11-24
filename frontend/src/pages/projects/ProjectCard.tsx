@@ -7,10 +7,11 @@ const ProjectCard = () => {
 
     const [project, setProject] = useState([]);
 
-    const [projectData, setProjectData] = React.useState({
+    const [projectData, setProjectData] = useState({
         shortDescription: "",
         projectName: "",
         projectId: "",
+        projectVisibility: "",
     })
 
     useEffect(() => {
@@ -26,8 +27,14 @@ const ProjectCard = () => {
     }, [params])
 
 
-    return <>
-        <h2>Project Nr: {projectData.projectId}</h2>
+    return <div className="flexColumnCenter">
+        <header className="headerStandardStyle">
+            <h2>Project Nr: {projectData.projectId}</h2>
+        </header>
+        <nav className="navbar">
+            <Link to="/">Home</Link>
+            <Link to="/projectOverview">Projects</Link>
+        </nav>
         {project && (
             <section
                 className='project__card'>
@@ -37,12 +44,12 @@ const ProjectCard = () => {
                 <p>
                     Short project description: {projectData.shortDescription}
                 </p>
+                <p>
+                    Project visibility: {projectData.projectVisibility.toString()}
+                </p>
             </section>
         )}
-        <nav>
-            <Link to="/projectOverview">Navigate to project overview</Link>
-        </nav>
-    </>
+    </div>
 }
 
 export default ProjectCard

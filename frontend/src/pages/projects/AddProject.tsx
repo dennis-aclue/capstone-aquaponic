@@ -1,21 +1,22 @@
 import React, {FormEvent, useState} from 'react';
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import '../../style/projects/addProject.css'
 
 export default function AddProject() {
 
-    const [newProject, setNewProject] = React.useState(
+    const [newProject, setNewProject] = useState(
         {
             shortDescription: "",
             projectName: ""
         }
     );
 
-    const baseUrl = '/api/projects/';
+    const projectsUrl = '/api/projects/';
     const [messageStatus, setMessageStatus] = useState('')
     const navigate = useNavigate();
     const [buttonText, setButtonText] = useState('save new project');
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const setBackHome = () => {
         navigate("/projectOverview")
@@ -23,16 +24,15 @@ export default function AddProject() {
 
     const postNewProject = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        axios.post(baseUrl, newProject)
+        axios.post(projectsUrl, newProject)
             .then(function (response) {
                 setButtonText('saving in progress');
                 setIsLoading(true)
-                console.log(response)
                 if (response.status === 200 || response.status === 201) {
                     setMessageStatus(' New Project ' + newProject.projectName + ', successfully created.');
                 }
             })
-            .then(() => setTimeout(() => setBackHome(), 4000))
+            .then(() => setTimeout(() => setBackHome(), 2000))
             .catch((e) => console.log("POST ERROR: " + e))
 
         setNewProject({projectName: "", shortDescription: ""});
@@ -45,38 +45,51 @@ export default function AddProject() {
         })
     }
 
-    return <>
-        <h2>Projects</h2>
-        <form onSubmit={postNewProject}>
-            <h3>Please insert your project name and description</h3>
+    return <div className="flexColumnCenter">
+
+        <header className="headerStandardStyle">
+            <h1>Projects</h1>
+        </header>
+        <nav className="addProject__navbar navbar">
+            <Link to="/">Home</Link>
+            <Link to="/projectOverview">Projects</Link>
+        </nav>
+        <form className="addProjectForm" onSubmit={postNewProject}>
             <br/>
-            <label>
-                Project name:
-                <input type="text"
-                       id="projectName"
-                       name="projectName"
-                       value={newProject.projectName}
-                       onChange={handleChange}
-                       placeholder="project name"
-                />
-            </label>
-            <br/>
-            <label>
-                Short project description:
-                <input type="text"
-                       id="projectDescription"
-                       name="shortDescription"
-                       value={newProject.shortDescription}
-                       onChange={handleChange}
-                       placeholder="project description"
-                />
-                <br/><br/>
-            </label>
-            <button disabled={isLoading}>{buttonText}</button>
             {!isLoading &&
-                <button onClick={() => navigate("/projectOverview")}>Cancel</button>
+                <> <label htmlFor="projectName">
+                    Project name:</label>
+                    <input className="addProjectForm__input"
+                           type="text"
+                           id="projectName"
+                           name="projectName"
+                           value={newProject.projectName}
+                           onChange={handleChange}
+                           placeholder="project name"
+                    />
+                </>
+
             }
-            {messageStatus && <p>{messageStatus}</p>}
+            {!isLoading &&
+                <>
+                    <label htmlFor="shortDescription">Short project description:</label>
+                    <input className="addProjectForm__input"
+                           type="text"
+                           id="shortDescription"
+                           name="shortDescription"
+                           value={newProject.shortDescription}
+                           onChange={handleChange}
+                           placeholder="project description"
+                    />
+
+                </>
+            }
+            <button disabled={isLoading}>{buttonText}</button>
         </form>
-    </>
+
+        {!isLoading &&
+            <button onClick={() => navigate("/projectOverview")}>Cancel</button>
+        }
+        {messageStatus && <p>{messageStatus}</p>}
+    </div>
 }
