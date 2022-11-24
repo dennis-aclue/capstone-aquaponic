@@ -1,12 +1,13 @@
 package de.voelkldennis.backend.projects;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@RequestMapping("api/projects")
+@RequestMapping("/api/projects")
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -26,7 +27,7 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
-    @GetMapping("projectCard/{projectId}")
+    @GetMapping("/projectCard/{projectId}")
     Optional<Project> getProjectWithId(@PathVariable String projectId) {
         return projectService.getProjectWithId(projectId);
     }
