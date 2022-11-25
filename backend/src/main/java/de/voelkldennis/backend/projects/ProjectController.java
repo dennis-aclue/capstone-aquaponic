@@ -37,7 +37,7 @@ public class ProjectController {
     void deleteProjectWithId(@PathVariable String projectId) {
         if ((projectService.isIdExisting(projectId))) {
             projectService.deleteProjectWithId(projectId);
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project with Id " + projectId + " not found");
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project " + projectId + " not found");
     }
 
 }

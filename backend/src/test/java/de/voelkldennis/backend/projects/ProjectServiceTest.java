@@ -100,7 +100,7 @@ class ProjectServiceTest {
         String wrongProjectId = "123";
         //when
         when(projectRepo.findAll()).thenReturn(List.of());
-        boolean returnFalse = !projectService.isIdExisting(wrongProjectId);
+        boolean returnFalse = projectService.isIdExisting(wrongProjectId);
         //then
         verify(projectRepo).findAll();
         assertFalse(returnFalse);

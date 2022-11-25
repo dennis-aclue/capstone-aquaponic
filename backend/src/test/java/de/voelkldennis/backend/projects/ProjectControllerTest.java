@@ -94,7 +94,7 @@ class ProjectControllerTest {
         Project project = objectMapper.readValue(content, Project.class);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/" + project.projectId()))
-                .andExpect(status().is(204));
+                .andExpect(status().is(200));
 
     }
 
@@ -102,7 +102,7 @@ class ProjectControllerTest {
     @DirtiesContext
     void deleteProjectWithNotExistingIdAndReturnNoContent() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/123"))
-                .andExpect(status().is(200));
+                .andExpect(status().is(404));
     }
 
 }
