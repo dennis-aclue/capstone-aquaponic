@@ -66,17 +66,13 @@ class ProjectServiceTest {
     void deleteProjectWithId() {
         //given
         String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
-        String projectName = "aquaponic_test_name";
-        String shortDescription = "aquaponic_test_description";
-        Boolean projectVisibility = false;
-        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
         //when
-        when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.of(projectWithId));
         Project actual = projectService.deleteProjectWithId(projectId);
         //then
         verify(projectRepo).deleteByProjectId(projectId);
         assertNull(actual);
     }
+
 
     @Test
     void isProjectIdExistingReturnTrue() {
@@ -85,13 +81,17 @@ class ProjectServiceTest {
         String projectName = "aquaponic_test_name";
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
+        List<Project> testProject = new ArrayList<>();
+        testProject.add(new Project(projectId, projectName, shortDescription, projectVisibility));
+
         Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
         //when
         when(projectRepo.findAll()).thenReturn(List.of(projectWithId));
-        boolean returnTrue = projectService.isIdExisting(projectId);
-        //then
-        verify(projectRepo).findAll();
-        assertTrue(returnTrue);
+        for (Project project : testProject) {
+            if (project.projectId().equals(projectId)) {
+                assertTrue(projectService.isIdExisting(projectId));
+            }
+        }
     }
 
     @Test
@@ -105,5 +105,4 @@ class ProjectServiceTest {
         verify(projectRepo).findAll();
         assertFalse(returnFalse);
     }
-
 }
