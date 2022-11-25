@@ -1,0 +1,22 @@
+.project__card {
+    background-color: #f2f2f2;
+    width: 100%;
+    display: grid;
+    justify-content: center;
+}
+
+.data {
+    color: #638e93;
+    font-size: 1.5em;
+    display: flex;
+    justify-content: center;
+    padding: 5px 0 5px 0;
+    margin: 0;
+}
+
+.label {
+    color: #919196;
+    font-style: italic;
+    display: flex;
+    justify-content: center;
+}
