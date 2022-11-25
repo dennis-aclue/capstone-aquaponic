@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProjectServiceTest {
@@ -59,7 +59,51 @@ class ProjectServiceTest {
         Optional<Project> expected = Optional.of(projectWithId);
         //then
         verify(projectRepo).findByProjectId(projectId);
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void deleteProjectWithId() {
+        //given
+        String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
+        String projectName = "aquaponic_test_name";
+        String shortDescription = "aquaponic_test_description";
+        Boolean projectVisibility = false;
+        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        //when
+        when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.of(projectWithId));
+        Project actual = projectService.deleteProjectWithId(projectId);
+        //then
+        verify(projectRepo).deleteByProjectId(projectId);
+        assertNull(actual);
+    }
+
+    @Test
+    void isProjectIdExistingReturnTrue() {
+        //given
+        String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
+        String projectName = "aquaponic_test_name";
+        String shortDescription = "aquaponic_test_description";
+        Boolean projectVisibility = false;
+        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        //when
+        when(projectRepo.findAll()).thenReturn(List.of(projectWithId));
+        boolean returnTrue = projectService.isIdExisting(projectId);
+        //then
+        verify(projectRepo).findAll();
+        assertTrue(returnTrue);
+    }
+
+    @Test
+    void isProjectNotExistingReturnFalse() {
+        //given
+        String wrongProjectId = "123";
+        //when
+        when(projectRepo.findAll()).thenReturn(List.of());
+        boolean returnFalse = !projectService.isIdExisting(wrongProjectId);
+        //then
+        verify(projectRepo).findAll();
+        assertFalse(returnFalse);
     }
 
 }
