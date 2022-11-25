@@ -33,13 +33,14 @@ export default function ProjectOverview() {
             <ul className="projectCard">{projects.map((projects: any) => <Link
                 to={"/projectCard/" + projects.projectId}>
                 <li className="projectCard__element projectCard__Element--Highlight" key={projects.projectId}>
-                    <h4>Project
-                        name: {projects.projectName}</h4>
-                    <p>{projects.shortDescription.substring(0, 20)}...</p></li>
+                    <p className="projectCard__element data">{projects.projectName}</p>
+                    <p className="projectCard__element data">{projects.shortDescription.substring(0, 20)}...</p></li>
             </Link>)}</ul>
         </section>
 
-        <button onClick={() => navigate("/addProject")}>add new project</button>
+        <p>
+            <button onClick={() => navigate("/addProject")}>add new project</button>
+        </p>
 
     </div>
 }

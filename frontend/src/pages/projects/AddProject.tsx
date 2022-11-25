@@ -18,7 +18,7 @@ export default function AddProject() {
     const [buttonText, setButtonText] = useState('save new project');
     const [isLoading, setIsLoading] = useState(false);
 
-    const setBackHome = () => {
+    const setBackToProjectOverview = () => {
         navigate("/projectOverview")
     }
 
@@ -32,7 +32,7 @@ export default function AddProject() {
                     setMessageStatus(' New Project ' + newProject.projectName + ', successfully created.');
                 }
             })
-            .then(() => setTimeout(() => setBackHome(), 2000))
+            .then(() => setTimeout(() => setBackToProjectOverview(), 2000))
             .catch((e) => console.log("POST ERROR: " + e))
 
         setNewProject({projectName: "", shortDescription: ""});
@@ -67,12 +67,13 @@ export default function AddProject() {
                            onChange={handleChange}
                            placeholder="project name"
                     />
+                    <p></p>
                 </>
 
             }
             {!isLoading &&
                 <>
-                    <label htmlFor="shortDescription">Short project description:</label>
+                    <label className="addProject_label" htmlFor="shortDescription">Short project description:</label>
                     <input className="addProjectForm__input"
                            type="text"
                            id="shortDescription"
@@ -81,10 +82,11 @@ export default function AddProject() {
                            onChange={handleChange}
                            placeholder="project description"
                     />
-
                 </>
             }
-            <button disabled={isLoading}>{buttonText}</button>
+            <p className="addProjectButton">
+                <button disabled={isLoading}>{buttonText}</button>
+            </p>
         </form>
 
         {!isLoading &&

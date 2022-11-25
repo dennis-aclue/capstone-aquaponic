@@ -6,6 +6,7 @@
 
 .addProjectForm__input {
     margin: 0 10px 0 10px;
+    background-color: #f2f2f2;
 }
 
 .projectCard {
@@ -14,4 +15,20 @@
     justify-content: center;
     flex-wrap: wrap;
     padding: 0;
+}
+
+input.addProjectForm__input {
+    margin: 0 10px 0 10px;
+    background-color: #f2f2f2;
+    width: 250px;
+    height: 25px;
+}
+
+p.addProjectButton {
+    color: #638e93;
+    font-size: 1.5em;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin: 0;
 }
