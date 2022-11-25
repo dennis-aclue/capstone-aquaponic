@@ -36,11 +36,11 @@ public class ProjectService {
     public boolean isIdExisting(String projectId) {
         List<Project> projects = projectRepo.findAll();
         for (Project project : projects) {
-            if (!project.projectId().equals(projectId)) {
-                return false;
+            if (project.projectId().equals(projectId)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }
 
