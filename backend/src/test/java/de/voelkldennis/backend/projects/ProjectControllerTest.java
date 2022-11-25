@@ -76,4 +76,33 @@ class ProjectControllerTest {
                         """.replace("<ID>", project.projectId())));
     }
 
+    @Test
+    @DirtiesContext
+    void deleteProjectWithIdAndReturnNoContent() throws Exception {
+
+        String content = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "projectName": "aquaponic_test_name",
+                                    "shortDescription": "aquaponic_test_description"
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        Project project = objectMapper.readValue(content, Project.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/" + project.projectId()))
+                .andExpect(status().is(204));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void deleteProjectWithNotExistingIdAndReturnNoContent() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/123"))
+                .andExpect(status().is(200));
+    }
+
 }
