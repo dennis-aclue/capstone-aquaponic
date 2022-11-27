@@ -39,12 +39,6 @@ const ProjectCard = () => {
             .catch((error) => console.log("Delete project with projectId ERROR: " + error))
     }
 
-    function deleteProjectQuestion() {
-        if (window.confirm("Do you really want to delete this project?")) {
-            deleteProject()
-        }
-    }
-
     return <div className="flexColumnCenter">
         <header className="headerStandardStyle"></header>
         <nav className="navbar">
@@ -61,10 +55,29 @@ const ProjectCard = () => {
                 <p className="projectCard__element data">{projectData.projectVisibility.toString()}</p>
             </section>
         )}
+        <section>
+            <p className="">
+                <button onClick={() => setIsLoading(false)}>delete project</button>
+            </p>
+        </section>
         <p>
-            <button onClick={deleteProjectQuestion}>delete project</button>
+            <button className="close-btn" onClick={() => navigate("/projectOverview")}>close</button>
         </p>
+        {!isLoading && (
+            <p className="popup">
+                <p className="popup-inner">
+                    <h1>Do you really want to delete your<br/>
+                        {projectData.projectName} project?</h1>
+                    <div>
+                        <button onClick={() => setIsLoading(true)}>cancel</button>
+                    </div>
+                    <button onClick={deleteProject}>ok</button>
+
+                </p>
+            </p>
+        )}
     </div>
+
 }
 
 export default ProjectCard
