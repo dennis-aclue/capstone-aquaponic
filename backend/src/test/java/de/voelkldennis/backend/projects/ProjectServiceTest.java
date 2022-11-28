@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,11 +67,33 @@ class ProjectServiceTest {
     void deleteProjectWithId() {
         //given
         String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
+        String projectName = "aquaponic_test_name";
+        String shortDescription = "aquaponic_test_description";
+        Boolean projectVisibility = false;
+        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
         //when
+        when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.of(projectWithId));
         Project actual = projectService.deleteProjectWithId(projectId);
         //then
-        verify(projectRepo).deleteByProjectId(projectId);
-        assertNull(actual);
+        verify(projectRepo).deleteByProjectId(projectWithId.projectId());
+        verify(projectRepo).findByProjectId(projectId);
+        assertEquals(projectWithId, actual);
+    }
+
+    @Test
+    void deleteProjectWithNoneExistingId() {
+        //given
+        String projectId = "123";
+        when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.empty());
+        //when
+        String message = null;
+        try {
+            projectService.deleteProjectWithId(projectId);
+        } catch (NoSuchElementException e) {
+            message = e.getMessage();
+        }
+        //then
+        assertEquals("Project does not exist", message);
     }
 
 

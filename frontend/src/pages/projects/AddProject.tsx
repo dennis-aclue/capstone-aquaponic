@@ -67,7 +67,6 @@ export default function AddProject() {
                            onChange={handleChange}
                            placeholder="project name"
                     />
-                    <p></p>
                 </>
 
             }
