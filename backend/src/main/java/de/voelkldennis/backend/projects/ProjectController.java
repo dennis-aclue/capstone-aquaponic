@@ -34,10 +34,16 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    void deleteProjectWithId(@PathVariable String projectId) {
+    public Project deleteProjectWithId(@PathVariable String projectId) {
         if ((projectService.isIdExisting(projectId))) {
-            projectService.deleteProjectWithId(projectId);
+            return projectService.deleteProjectWithId(projectId);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project " + projectId + " not found");
     }
 
+    @PutMapping("/update/{projectId}")
+    public Project updateProjectWithId(@PathVariable String projectId, @RequestBody NewProjectDTO newProjectDTO) {
+        if ((projectService.isIdExisting(projectId))) {
+            return projectService.updateProjectWithId(projectId, newProjectDTO);
+        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project " + projectId + " not found");
+    }
 }

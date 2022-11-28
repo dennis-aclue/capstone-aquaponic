@@ -45,4 +45,13 @@ public class ProjectService {
         }
         return false;
     }
+
+    public Project updateProjectWithId(String projectId, NewProjectDTO newProjectDTO) {
+        Project updatedProject = new Project(
+                projectId,
+                newProjectDTO.projectName(),
+                newProjectDTO.shortDescription(),
+                newProjectDTO.projectVisibility());
+        return projectRepo.save(updatedProject);
+    }
 }
