@@ -8,6 +8,7 @@ const ProjectCard = () => {
     const navigate = useNavigate();
     const [project, setProject] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectVisibility, setSelectVisibility] = useState('no');
     const [projectData, setProjectData] = useState({
         shortDescription: "",
         projectName: "",
@@ -39,6 +40,11 @@ const ProjectCard = () => {
             .catch((error) => console.log("Delete project with projectId ERROR: " + error))
     }
 
+    const changeVisibility = (event: any) => {
+        console.log(event.target.value);
+        setSelectVisibility(event.target.value);
+    };
+
     return <div className="flexColumnCenter">
         <header className="headerStandardStyle"></header>
         <nav className="navbar">
@@ -52,7 +58,28 @@ const ProjectCard = () => {
                 <p className="projectCard__element label">Short project description:</p>
                 <p className="projectCard__element data">{projectData.shortDescription}</p>
                 <p className="projectCard__element label">Project visibility</p>
-                <p className="projectCard__element data">{projectData.projectVisibility.toString()}</p>
+                <p className="projectCard__element radio">
+                    <input
+                        disabled={isLoading}
+                        type="radio"
+                        id="yes"
+                        name="visibility"
+                        value="yes"
+                        checked={selectVisibility === 'yes'}
+                        onChange={changeVisibility}
+                    />
+                    <label htmlFor="yes">True</label></p>
+                <p className="projectCard__element radio">
+                    <input
+                        disabled={isLoading}
+                        type="radio"
+                        id="no"
+                        name="visibility"
+                        value="no"
+                        onChange={changeVisibility}
+                        checked={selectVisibility === 'no'}
+                    />
+                    <label htmlFor="no">False</label></p>
             </section>
         )}
         <section>
@@ -68,11 +95,10 @@ const ProjectCard = () => {
                 <p className="popup-inner">
                     <h1>Do you really want to delete your<br/>
                         {projectData.projectName} project?</h1>
-                    <div>
+                    <p className="popup-inner__element button">
                         <button onClick={() => setIsLoading(true)}>cancel</button>
-                    </div>
-                    <button onClick={deleteProject}>ok</button>
-
+                        <button onClick={deleteProject}>ok</button>
+                    </p>
                 </p>
             </p>
         )}
