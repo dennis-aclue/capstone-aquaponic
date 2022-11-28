@@ -49,13 +49,13 @@ const ProjectCard = () => {
     }
 
     function updateProject() {
-        const updateProjectUrl = `/api/projects/${params.projectId}`
+        const updateProjectUrl = `/api/projects/update/${params.projectId}`
         axios.put(updateProjectUrl, projectData)
             .then((response) => {
-                setIsLoading(false)
-                setStartEditing(true)
+                setStartEditing(false)
                 window.location.reload();
             })
+
             .catch((error) => console.log("Update project with projectId ERROR: " + error))
     }
 
