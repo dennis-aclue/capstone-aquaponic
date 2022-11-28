@@ -125,7 +125,8 @@ const ProjectCard = () => {
                     <button onClick={cancelEdit}>cancel edit</button>
                     <button onClick={updateProject}>save</button>
                 </div>
-            ) || (
+            )}
+            {startEditing && (
                 <button onClick={() => setStartEditing(false)}>edit project</button>
             )}
 
