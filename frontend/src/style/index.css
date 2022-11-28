@@ -54,6 +54,9 @@ button {
     background-color: #638e93;
     color: white;
     text-align: center;
+    margin: 10px;
+    padding: 10px;
+    justify-content: center;
 }
 
 .navbar {
@@ -64,7 +67,6 @@ button {
     border-bottom: #919196 solid 1px;
 }
 
-/* Style the links inside the navigation bar */
 .navbar a {
     float: left;
     display: block;
@@ -75,13 +77,11 @@ button {
     font-size: 17px;
 }
 
-/* Change the color of links on hover */
 .navbar a:hover {
     text-decoration: underline;
     color: black;
 }
 
-/* Add a color to the active/current link */
 .navbar a.active {
     color: white;
 }

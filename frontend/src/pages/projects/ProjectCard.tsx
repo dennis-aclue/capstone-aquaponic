@@ -18,8 +18,6 @@ const ProjectCard = () => {
 
     useEffect(() => {
         const singleProjectUrl = `/api/projects/projectCard/${params.projectId}`
-        console.log("SingleProjectURL: " + singleProjectUrl)
-        console.log("Params: " + params.id)
         axios.get(singleProjectUrl)
             .then((response) => {
                 setProject(response.data)
@@ -34,14 +32,12 @@ const ProjectCard = () => {
         axios.delete(deleteProjectUrl)
             .then((response) => {
                 setIsLoading(false)
-                console.log("Delete project with projectId SUCCESS: " + response)
                 navigate("/projectOverview")
             })
             .catch((error) => console.log("Delete project with projectId ERROR: " + error))
     }
 
     const changeVisibility = (event: any) => {
-        console.log(event.target.value);
         setSelectVisibility(event.target.value);
     };
 
@@ -82,11 +78,9 @@ const ProjectCard = () => {
                     <label htmlFor="no">False</label></p>
             </section>
         )}
-        <section>
-            <p className="">
-                <button onClick={() => setIsLoading(false)}>delete project</button>
-            </p>
-        </section>
+        <p>
+            <button onClick={() => setIsLoading(false)}>delete project</button>
+        </p>
         <p>
             <button className="close-btn" onClick={() => navigate("/projectOverview")}>close</button>
         </p>
@@ -94,11 +88,10 @@ const ProjectCard = () => {
             <p className="popup">
                 <p className="popup-inner">
                     <h1>Do you really want to delete your<br/>
-                        {projectData.projectName} project?</h1>
-                    <p className="popup-inner__element button">
-                        <button onClick={() => setIsLoading(true)}>cancel</button>
-                        <button onClick={deleteProject}>ok</button>
-                    </p>
+                        "{projectData.projectName}" <br/>
+                        project?</h1>
+                    <button className="popup-inner__element button" onClick={() => setIsLoading(true)}>cancel</button>
+                    <button className="popup-inner__element button" onClick={deleteProject}>ok</button>
                 </p>
             </p>
         )}

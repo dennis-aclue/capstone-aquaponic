@@ -37,12 +37,13 @@
     background-color: rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
-
+    margin: 0;
 }
 
 .popup-inner {
     justify-content: center;
     align-items: center;
+    text-align: center;
     justify-items: center;
     justify-self: center;
     align-self: center;
@@ -52,10 +53,5 @@
     background-color: #fff;
 }
 
-.button {
-    color: #638e93;
-    font-size: 1.5em;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-}
+
+

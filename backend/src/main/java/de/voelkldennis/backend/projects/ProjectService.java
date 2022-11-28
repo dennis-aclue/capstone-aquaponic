@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,8 +30,10 @@ public class ProjectService {
 
 
     public Project deleteProjectWithId(String projectId) {
+        Project deletedProject = projectRepo.findByProjectId(projectId).orElseThrow(
+                () -> new NoSuchElementException("Project does not exist"));
         projectRepo.deleteByProjectId(projectId);
-        return null;
+        return deletedProject;
     }
 
     public boolean isIdExisting(String projectId) {

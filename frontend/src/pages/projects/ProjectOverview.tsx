@@ -38,9 +38,9 @@ export default function ProjectOverview() {
             </Link>)}</ul>
         </section>
 
-        <p>
+        <div>
             <button onClick={() => navigate("/addProject")}>add new project</button>
-        </p>
+        </div>
 
     </div>
 }
