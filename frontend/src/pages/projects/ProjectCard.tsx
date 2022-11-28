@@ -3,11 +3,13 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import '../../style/projects/projectCard.css';
 
+
 const ProjectCard = () => {
     const params = useParams()
     const navigate = useNavigate();
     const [project, setProject] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [startEditing, setStartEditing] = useState(true);
     const [selectVisibility, setSelectVisibility] = useState('no');
     const [projectData, setProjectData] = useState({
         shortDescription: "",
@@ -41,22 +43,55 @@ const ProjectCard = () => {
         setSelectVisibility(event.target.value);
     };
 
+    function cancelEdit() {
+        setStartEditing(true)
+        window.location.reload();
+    }
+
+    function updateProject() {
+        const updateProjectUrl = `/api/projects/${params.projectId}`
+        axios.put(updateProjectUrl, projectData)
+            .then((response) => {
+                setIsLoading(false)
+                setStartEditing(true)
+                window.location.reload();
+            })
+            .catch((error) => console.log("Update project with projectId ERROR: " + error))
+    }
+
     return <div className="flexColumnCenter">
         <header className="headerStandardStyle"></header>
         <nav className="navbar">
             <Link to="/">Home</Link>
             <Link to="/projectOverview">Projects</Link>
         </nav>
+
         {project && isLoading && (
-            <section className='project__card'>
+            <form className='project__card'>
                 <p className="projectCard__element label">Project name:</p>
-                <p className="projectCard__element data">{projectData.projectName}</p>
+                <input
+                    className="projectCard__element input"
+                    disabled={startEditing}
+                    type="input"
+                    id="projectName"
+                    name="projectName"
+                    value={projectData.projectName}
+                    onChange={(e) => setProjectData({...projectData, projectName: e.target.value})}
+                />
                 <p className="projectCard__element label">Short project description:</p>
-                <p className="projectCard__element data">{projectData.shortDescription}</p>
+                <input
+                    className="projectCard__element input"
+                    disabled={startEditing}
+                    type="input"
+                    id="shortDescription"
+                    name="shortDescription"
+                    value={projectData.shortDescription}
+                    onChange={(e) => setProjectData({...projectData, shortDescription: e.target.value})}
+                />
                 <p className="projectCard__element label">Project visibility</p>
                 <p className="projectCard__element radio">
                     <input
-                        disabled={isLoading}
+                        disabled={startEditing}
                         type="radio"
                         id="yes"
                         name="visibility"
@@ -67,7 +102,7 @@ const ProjectCard = () => {
                     <label htmlFor="yes">True</label></p>
                 <p className="projectCard__element radio">
                     <input
-                        disabled={isLoading}
+                        disabled={startEditing}
                         type="radio"
                         id="no"
                         name="visibility"
@@ -76,13 +111,27 @@ const ProjectCard = () => {
                         checked={selectVisibility === 'no'}
                     />
                     <label htmlFor="no">False</label></p>
-            </section>
+            </form>
         )}
         <p>
-            <button onClick={() => setIsLoading(false)}>delete project</button>
+            {startEditing && (
+                <div>
+                    <button onClick={() => setIsLoading(false)}>delete project</button>
+                    <button className="close-btn" onClick={() => navigate("/projectOverview")}>close</button>
+                </div>
+            )}
+            {!startEditing && (
+                <div>
+                    <button onClick={cancelEdit}>cancel edit</button>
+                    <button onClick={updateProject}>save</button>
+                </div>
+            ) || (
+                <button onClick={() => setStartEditing(false)}>edit project</button>
+            )}
+
         </p>
         <p>
-            <button className="close-btn" onClick={() => navigate("/projectOverview")}>close</button>
+
         </p>
         {!isLoading && (
             <p className="popup">
