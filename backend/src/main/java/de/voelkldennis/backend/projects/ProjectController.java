@@ -46,4 +46,10 @@ public class ProjectController {
             return projectService.updateProjectWithId(projectId, newProjectDTO);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project " + projectId + " not found");
     }
+
+    @GetMapping("/freeGallery")
+    List<Project> getAllVisibleProjects() {
+        return projectService.getAllVisibleProjects();
+    }
+
 }

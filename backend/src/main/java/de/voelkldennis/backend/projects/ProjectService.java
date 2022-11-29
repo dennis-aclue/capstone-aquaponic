@@ -54,4 +54,10 @@ public class ProjectService {
                 newProjectDTO.projectVisibility());
         return projectRepo.save(updatedProject);
     }
+
+    public List<Project> getAllVisibleProjects() {
+        return projectRepo.findAll().stream()
+                .filter(Project::projectVisibility)
+                .toList();
+    }
 }
