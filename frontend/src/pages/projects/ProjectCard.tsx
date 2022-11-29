@@ -10,12 +10,12 @@ const ProjectCard = () => {
     const [project, setProject] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [startEditing, setStartEditing] = useState(true);
-    const [selectVisibility, setSelectVisibility] = useState('no');
+    const [isChecked, setIsChecked] = useState(true);
     const [projectData, setProjectData] = useState({
         shortDescription: "",
         projectName: "",
         projectId: "",
-        projectVisibility: "",
+        projectVisibility: false,
     })
 
     useEffect(() => {
@@ -32,16 +32,12 @@ const ProjectCard = () => {
     function deleteProject() {
         const deleteProjectUrl = `/api/projects/${params.projectId}`
         axios.delete(deleteProjectUrl)
-            .then((response) => {
+            .then(() => {
                 setIsLoading(false)
                 navigate("/projectOverview")
             })
             .catch((error) => console.log("Delete project with projectId ERROR: " + error))
     }
-
-    const changeVisibility = (event: any) => {
-        setSelectVisibility(event.target.value);
-    };
 
     function cancelEdit() {
         setStartEditing(true)
@@ -51,13 +47,19 @@ const ProjectCard = () => {
     function updateProject() {
         const updateProjectUrl = `/api/projects/update/${params.projectId}`
         axios.put(updateProjectUrl, projectData)
-            .then((response) => {
+            .then(() => {
                 setStartEditing(false)
                 window.location.reload();
             })
 
             .catch((error) => console.log("Update project with projectId ERROR: " + error))
     }
+
+    const checkHandler = () => {
+        setIsChecked(!isChecked)
+        setProjectData({...projectData, projectVisibility: isChecked})
+    }
+
 
     return <div className="flexColumnCenter">
         <header className="headerStandardStyle"></header>
@@ -68,49 +70,49 @@ const ProjectCard = () => {
 
         {project && isLoading && (
             <form className='project__card'>
-                <p className="projectCard__element label">Project name:</p>
-                <input
-                    className="projectCard__element input"
-                    disabled={startEditing}
-                    type="input"
-                    id="projectName"
-                    name="projectName"
-                    value={projectData.projectName}
-                    onChange={(e) => setProjectData({...projectData, projectName: e.target.value})}
-                />
-                <p className="projectCard__element label">Short project description:</p>
-                <input
-                    className="projectCard__element input"
-                    disabled={startEditing}
-                    type="input"
-                    id="shortDescription"
-                    name="shortDescription"
-                    value={projectData.shortDescription}
-                    onChange={(e) => setProjectData({...projectData, shortDescription: e.target.value})}
-                />
+                <p className="projectCard__element label">Project name</p>
+
+                {
+                    startEditing ? (<p className="projectCard__element inputTernary">{projectData.projectName}</p>) : (
+                        <input
+                            className="projectCard__element input"
+                            disabled={startEditing}
+                            type="text"
+                            id="projectName"
+                            name="projectName"
+                            value={projectData.projectName}
+                            onChange={(e) => setProjectData({...projectData, projectName: e.target.value})}
+                        />)
+
+                }
+                <p className="projectCard__element label">Short description</p>
+                {
+                    startEditing ? (
+                        <p className="projectCard__element inputTernary">{projectData.shortDescription}</p>) : (
+                        <input
+                            className="projectCard__element input"
+                            disabled={startEditing}
+                            type="input"
+                            id="shortDescription"
+                            name="shortDescription"
+                            value={projectData.shortDescription}
+                            onChange={(e) => setProjectData({...projectData, shortDescription: e.target.value})}
+                        />)
+                }
                 <p className="projectCard__element label">Project visibility</p>
                 <p className="projectCard__element radio">
                     <input
                         disabled={startEditing}
-                        type="radio"
-                        id="yes"
-                        name="visibility"
-                        value="yes"
-                        checked={selectVisibility === 'yes'}
-                        onChange={changeVisibility}
+                        type="checkbox"
+                        id="projectVisibility"
+                        name="projectVisibility"
+                        checked={projectData.projectVisibility}
+                        onChange={checkHandler}
                     />
-                    <label htmlFor="yes">True</label></p>
-                <p className="projectCard__element radio">
-                    <input
-                        disabled={startEditing}
-                        type="radio"
-                        id="no"
-                        name="visibility"
-                        value="no"
-                        onChange={changeVisibility}
-                        checked={selectVisibility === 'no'}
-                    />
-                    <label htmlFor="no">False</label></p>
+                    <span
+                        className="projectCard__element label">{projectData.projectVisibility ? "visible for all" : "only visible for you"}</span>
+                </p>
+
             </form>
         )}
         <p>
