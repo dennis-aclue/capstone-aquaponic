@@ -105,4 +105,75 @@ class ProjectControllerTest {
                 .andExpect(status().is(404));
     }
 
+    @Test
+    @DirtiesContext
+    void updateProjectWithExistingIdAndReturnUpdatedProject() throws Exception {
+
+        String content = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "projectName": "aquaponic_test_name",
+                                    "shortDescription": "aquaponic_test_description"
+                                }
+                                """))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        Project newUpdatedProject = objectMapper.readValue(content, Project.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectCard/" + newUpdatedProject.projectId()))
+                .andExpect(status().is(200))
+                .andExpect(content().json("""
+                        {
+                            "projectId": "<ID>",
+                            "projectName": "aquaponic_test_name",
+                            "shortDescription": "aquaponic_test_description",
+                            "projectVisibility": false
+                        }
+                        """.replace("<ID>", newUpdatedProject.projectId())));
+
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/projects/update/" + newUpdatedProject.projectId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "projectName": "aquaponic_project",
+                                    "shortDescription": "aquaponic_project_description",
+                                    "projectVisibility": true
+                                }
+                                """))
+                .andExpect(status().is(200))
+                .andReturn().getResponse().getContentAsString();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectCard/" + newUpdatedProject.projectId()))
+                .andExpect(status().is(200))
+                .andExpect(content().json("""
+                                {
+                                    "projectId": "<ID>",
+                                    "projectName": "aquaponic_project",
+                                    "shortDescription": "aquaponic_project_description",
+                                    "projectVisibility": true
+                                }
+                        """.replace("<ID>", newUpdatedProject.projectId())));
+
+    }
+
+    @Test
+    @DirtiesContext
+    void updateProjectWithNotExistingIdAndReturn404() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/projects/update/123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "projectName": "aquaponic_project",
+                                    "shortDescription": "aquaponic_project_description",
+                                    "projectVisibility": true
+                                }
+                                """))
+                .andExpect(status().is(404));
+    }
+
+
 }
+

@@ -140,4 +140,27 @@ class ProjectServiceTest {
         verify(projectRepo).findAll();
         assertFalse(returnFalse);
     }
+
+    @Test
+    void updateProjectWithIdAndReturnUpdatedProject() {
+        //given
+        String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
+        Project projectWithId = new Project(projectId,
+                "aquaponic_test_name",
+                "aquaponic_test_description",
+                false);
+        NewProjectDTO newProjectDTO = new NewProjectDTO("updatedName",
+                "updatedDescription",
+                true);
+        Project updatedProject = new Project(projectId,
+                "updatedName",
+                "updatedDescription",
+                true);
+        //when
+        when(projectRepo.save(updatedProject)).thenReturn(updatedProject);
+        Project actual = projectService.updateProjectWithId(projectId, newProjectDTO);
+        //then
+        verify(projectRepo).save(updatedProject);
+        assertNotSame(projectWithId, actual);
+    }
 }
