@@ -13,6 +13,7 @@ export default function HomePage() {
             <h2>Welcome!</h2> <br/>
             <p className="mainText">Please feel free to share your knowledge to make the world a little bit better</p>
             <nav className="navbar">
+                <Link to="/freeGallery">Gallery</Link>
                 <Link to="/projectOverview">Projects</Link>
             </nav>
         </main>

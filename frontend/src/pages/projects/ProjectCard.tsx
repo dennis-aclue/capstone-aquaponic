@@ -92,7 +92,7 @@ const ProjectCard = () => {
                         <input
                             className="projectCard__element input"
                             disabled={startEditing}
-                            type="input"
+                            type="text"
                             id="shortDescription"
                             name="shortDescription"
                             value={projectData.shortDescription}
@@ -115,7 +115,6 @@ const ProjectCard = () => {
 
             </form>
         )}
-        <p>
             {startEditing && (
                 <div>
                     <button onClick={() => setIsLoading(false)}>delete project</button>
@@ -131,11 +130,6 @@ const ProjectCard = () => {
             {startEditing && (
                 <button onClick={() => setStartEditing(false)}>edit project</button>
             )}
-
-        </p>
-        <p>
-
-        </p>
         {!isLoading && (
             <p className="popup">
                 <p className="popup-inner">
