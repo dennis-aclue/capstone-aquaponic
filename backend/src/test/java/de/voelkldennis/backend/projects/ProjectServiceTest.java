@@ -163,4 +163,15 @@ class ProjectServiceTest {
         verify(projectRepo).save(updatedProject);
         assertNotSame(projectWithId, actual);
     }
+
+    @Test
+    void getAllVisibleProjects() {
+        //given
+        List<Project> testProject = new ArrayList<>();
+        //when
+        when(projectRepo.findAll()).thenReturn(testProject);
+        List<Project> actual = projectService.getAllVisibleProjects();
+        //then
+        assertEquals(testProject, actual);
+    }
 }

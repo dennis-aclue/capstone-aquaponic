@@ -175,5 +175,12 @@ class ProjectControllerTest {
     }
 
 
+    @Test
+    void getAllVisibleProjects() throws Exception {
+        //given&when
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/freeGallery"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
 }
 
