@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
+@Repository("ProjectRepo")
 public interface ProjectRepo extends MongoRepository<Project, String> {
     Optional<Project> findByProjectId(String projectId);
 
