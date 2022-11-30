@@ -1,25 +1,37 @@
 package de.voelkldennis.backend.domain;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
-@Service
 @RequiredArgsConstructor
-public class UserService implements UserDetails {
-    private final UserRepo userRepo;
+@Service("userDetailsService")
+@Transactional
+public class UserService implements UserDetails, UserDetailsService {
+    private UserRepo userRepo;
     private User user;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-    public User getUser(String username) {
-        return userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+    public UserService(User user) {
+        this.user = user;
     }
+
+//    public User getUser(String username) {
+//        return userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+//    }
 
     public void deleteUser(String username) {
         userRepo.deleteByUsername(username);
@@ -69,4 +81,21 @@ public class UserService implements UserDetails {
     public boolean isEnabled() {
         return this.user.isActive();
     }
+
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepo.findByUsername(username);
+        if (user == null) {
+            LOGGER.error("User not found by username: " + username);
+            throw new UsernameNotFoundException("User not found by username: " + username);
+        } else {
+            user.setLastLoginDateDisplay(user.getLastLoginDate());
+            user.setLastLoginDate(new Date());
+            userRepo.save(user);
+            UserService userService = new UserService(user);
+            LOGGER.info("Returning found user by username: " + username);
+            return userService;
+        }
+    }
+
 }
