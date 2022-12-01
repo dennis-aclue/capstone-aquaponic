@@ -12,7 +12,7 @@ export default function AddProject() {
         }
     );
 
-    const projectsUrl = '/api/projects/';
+    const projectsUrl = '/api/projects/addProject';
     const [messageStatus, setMessageStatus] = useState('')
     const navigate = useNavigate();
     const [buttonText, setButtonText] = useState('save new project');

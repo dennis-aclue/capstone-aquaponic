@@ -1,5 +1,6 @@
 package de.voelkldennis.backend.projects;
 
+import de.voelkldennis.backend.exception.domain.ExceptionHandling;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -8,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/projects")
-public class ProjectController {
+@RequestMapping(path = {"/", "/api/projects"})
+public class ProjectController extends ExceptionHandling {
 
     private final ProjectService projectService;
 
@@ -17,13 +18,13 @@ public class ProjectController {
         this.projectService = projectService;
     }
 
-    @PostMapping
+    @PostMapping("/addProject")
     @ResponseStatus(code = HttpStatus.CREATED)
     Project addNewProject(@RequestBody NewProjectDTO newProjectDTO) {
         return projectService.addNewProject(newProjectDTO);
     }
 
-    @GetMapping
+    @GetMapping("/projectOverview")
     List<Project> getAllProjects() {
         return projectService.getAllProjects();
     }

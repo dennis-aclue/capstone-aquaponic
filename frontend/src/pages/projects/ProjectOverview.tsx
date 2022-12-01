@@ -6,7 +6,7 @@ import '../../style/projects/projectOverview.css'
 export default function ProjectOverview() {
 
     const navigate = useNavigate();
-    const projectsUrl = '/api/projects/';
+    const projectsUrl = '/api/projects/projectOverview';
 
     useEffect(() => {
         getAllProjects()
