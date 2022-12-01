@@ -12,10 +12,10 @@ export default function App() {
         <main>
             <Routes>
                 <Route path="/" element={<HomePage/>}/>
-                <Route path="/freeGallery" element={<FreeGallery/>}/>
                 <Route path="/projectOverview" element={<ProjectOverview/>}/>
                 <Route path="/addProject" element={<AddProject/>}/>
                 <Route path="/projectCard/:projectId" element={<ProjectCard/>}/>
+                <Route path="/freeGallery" element={<FreeGallery/>}/>
                 <Route path="/freeProjectCard/:projectId" element={<FreeProjectCard/>}/>
             </Routes>
         </main>
