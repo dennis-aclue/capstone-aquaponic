@@ -1,8 +1,13 @@
 package de.voelkldennis.backend.domain;
 
+import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.ExceptionHandling;
-import de.voelkldennis.backend.exception.domain.UserNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
+import de.voelkldennis.backend.exception.domain.UsernameExistException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,10 +17,21 @@ public class UserController extends ExceptionHandling {
 
     public UserService userService;
 
-    @GetMapping("/home")
-    public String showUser() throws UserNotFoundException {
-        //return "test";
-        throw new UserNotFoundException("This user does not exist");
+    @Autowired
+    public void UserResource(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) throws
+            EmailExistException,
+            UsernameExistException {
+        User newUser = userService.register(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getEmail());
+        return new ResponseEntity<User>(newUser, HttpStatus.OK);
     }
 
 }

@@ -14,7 +14,7 @@ public class User implements Serializable {
     @Id
     //@GeneratedValue(strategy = GenerationType.AUTO)     // Autoincrement
     //@Column(nullable = false, updatable = false)        // unique = true
-    private Long id;                //id for database, primary key
+    private String id;                //id for database, primary key
     private String userId;
     private String firstName;
     private String lastName;
@@ -25,16 +25,16 @@ public class User implements Serializable {
     private Date lastLoginDate;
     private Date lastLoginDateDisplay;
     private Date joinDate;
-    private String[] roles;         //Roles for the user [USER, ADMIN, MANAGER]
-    private String[] authorities;   //Authorities for the user [USER_READ, USER_WRITE, ...]
+    private String role;         //Role for the user [USER, ADMIN, MANAGER]
+    private String[] authorities;   //Authorities for the user [USER_READ, USER_WRITE, ...] from Authority class
     private boolean isActive;
     private boolean isNotLocked;    //Is the user locked or not
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -118,12 +118,12 @@ public class User implements Serializable {
         this.joinDate = joinDate;
     }
 
-    public String[] getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public void setRoles(String[] roles) {
-        this.roles = roles;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String[] getAuthorities() {
