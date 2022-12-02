@@ -12,8 +12,6 @@ import java.util.Date;
 public class User implements Serializable {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)     // Autoincrement
-    //@Column(nullable = false, updatable = false)        // unique = true
     private String id;                //id for database, primary key
     private String userId;
     private String firstName;

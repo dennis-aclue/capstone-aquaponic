@@ -23,15 +23,10 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws
+    public ResponseEntity<User> register(@RequestBody NewUserDTO newUserDTO) throws
             EmailExistException,
             UsernameExistException {
-        User newUser = userService.register(
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getEmail());
-        return new ResponseEntity<User>(newUser, HttpStatus.OK);
+        return new ResponseEntity<>(userService.register(newUserDTO), HttpStatus.OK);
     }
 
 }
