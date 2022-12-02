@@ -1,13 +1,11 @@
 package de.voelkldennis.backend.domain;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@RequiredArgsConstructor
 @Document("users")
 public class User implements Serializable {
 
@@ -27,6 +25,27 @@ public class User implements Serializable {
     private String[] authorities;   //Authorities for the user [USER_READ, USER_WRITE, ...] from Authority class
     private boolean isActive;
     private boolean isNotLocked;    //Is the user locked or not
+
+    public User() {
+    }
+
+    public User(String id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
+        this.id = id;
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.profileImageUrl = profileImageUrl;
+        this.lastLoginDate = lastLoginDate;
+        this.lastLoginDateDisplay = lastLoginDateDisplay;
+        this.joinDate = joinDate;
+        this.role = role;
+        this.authorities = authorities;
+        this.isActive = isActive;
+        this.isNotLocked = isNotLocked;
+    }
 
     public String getId() {
         return id;
