@@ -25,12 +25,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
 import static java.util.Arrays.stream;
 
 @RequiredArgsConstructor
 @Service("userDetailsService")
 @Transactional
 public class UserService implements UserDetails, UserDetailsService, UserServiceImpl {
+
     private UserRepo userRepo;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     public static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -96,55 +98,53 @@ public class UserService implements UserDetails, UserDetailsService, UserService
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
         if (user == null) {
-            LOGGER.error("User not found by username: " + username);
-            throw new UsernameNotFoundException("User not found by username: " + username);
+            LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
+            throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
         } else {
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepo.save(user);
             UserService userService = new UserService();
-            LOGGER.info("Returning found user by username: " + username);
+            LOGGER.info(RETURNING_FOUND_USER_BY_USERNAME + username);
             return userService;
         }
     }
 
-    @Override
-    public User register(String firstName,
-                         String lastName,
-                         String username,
-                         String email)
+    public User register(NewUserDTO newUserDTO)
             throws EmailExistException,
             UsernameExistException,
             UsernameNotFoundException {
 
-        validateNewUsernameAndEmail(StringUtils.EMPTY, username, email);
+        validateNewUsernameAndEmail(
+                StringUtils.EMPTY,
+                newUserDTO.username(),
+                newUserDTO.email());
 
         User appUser = new User();
         appUser.setId(generateUserId());
         appUser.setUserId(generateUserId());
         String password = generatePassword();
         String encodedPassword = encodePassword(password);
-        appUser.setFirstName(firstName);
-        appUser.setLastName(lastName);
-        appUser.setUsername(username);
-        appUser.setEmail(email);
+        appUser.setFirstName(newUserDTO.firstName());
+        appUser.setLastName(newUserDTO.lastName());
+        appUser.setUsername(newUserDTO.username());
+        appUser.setEmail(newUserDTO.email());
         appUser.setJoinDate(new Date());
         appUser.setPassword(encodedPassword);
         appUser.setActive(true);
         appUser.setNotLocked(true);
         appUser.setRole(Role.ROLE_USER.name());
         appUser.setAuthorities(Role.ROLE_USER.getAuthorities());
-        appUser.setProfileImageUrl(getTemporaryProfileImageUrl(username));
+        appUser.setProfileImageUrl(getTemporaryProfileImageUrl(newUserDTO.username()));
         userRepo.save(appUser);
-        // For now to test the registration, I will log the password in the console
-        //LOGGER.info("New user password: " + password);
+        LOGGER.info("New user password (LOG only for developing purpose): " + password);
 
-        return null;
+        return appUser;
     }
 
     private String getTemporaryProfileImageUrl(String username) {
         // for later configuration of the profile image
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/image/profile/temp").toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PROFILE_TEMP).toUriString();
         //return "https://robohash.org/" + username + "?set=set3&size=180x180";
     }
 
@@ -167,45 +167,41 @@ public class UserService implements UserDetails, UserDetailsService, UserService
             EmailExistException,
             UsernameNotFoundException {
 
+        User userByNewUsername = findUserByUsername(newUsername);
+        User userByNewEmail = findUserByEmail(newEmail);
+
         if (StringUtils.isNotBlank(currentUsername)) {
             User currentUser = findUserByUsername(currentUsername);
             if (currentUser == null) {
-                throw new UsernameNotFoundException("No user found by username: " + currentUsername);
+                throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + currentUsername);
             }
-            User userByNewUsername = findUserByUsername(newUsername);
             if (userByNewUsername != null && currentUser.getId().equals(userByNewUsername.getId())) {
-                throw new UsernameExistException("Username already exists");
+                throw new UsernameExistException(USERNAME_ALREADY_EXISTS);
             }
-            User userByNewEmail = findUserByEmail(newEmail);
             if (userByNewEmail != null && currentUser.getId().equals(userByNewEmail.getId())) {
-                throw new EmailExistException("Email already exists");
+                throw new EmailExistException(EMAIL_ALREADY_EXISTS);
             }
             return currentUser;
         } else {
-            User userByUsername = findUserByUsername(newUsername);
-            if (userByUsername != null) {
-                throw new UsernameExistException("Username already exists");
+            if (userByNewUsername != null) {
+                throw new UsernameExistException(USERNAME_ALREADY_EXISTS);
             }
-            User userByEmail = findUserByEmail(newEmail);
-            if (userByEmail != null) {
-                throw new EmailExistException("Email already exists");
+            if (userByNewEmail != null) {
+                throw new EmailExistException(EMAIL_ALREADY_EXISTS);
             }
             return null;
         }
     }
 
-    @Override
     public List<User> getUsers() {
-        return null;
+        return userRepo.findAll();
     }
 
-    @Override
     public User findUserByUsername(String username) {
-        return null;
+        return userRepo.findByUsername(username);
     }
 
-    @Override
     public User findUserByEmail(String email) {
-        return null;
+        return userRepo.findUserByEmail(email);
     }
 }
