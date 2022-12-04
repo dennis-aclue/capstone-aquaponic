@@ -2,6 +2,7 @@ package de.voelkldennis.backend.projects;
 
 import de.voelkldennis.backend.exception.domain.ExceptionHandling;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class ProjectController extends ExceptionHandling {
 
     private final ProjectService projectService;
+    private AuthenticationManager authenticationManager;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, AuthenticationManager authenticationManager) {
         this.projectService = projectService;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/addProject")

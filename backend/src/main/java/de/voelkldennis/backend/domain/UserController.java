@@ -1,9 +1,13 @@
 package de.voelkldennis.backend.domain;
 
 import de.voelkldennis.backend.domain.enumeration.UserService;
+import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.ExceptionHandling;
+import de.voelkldennis.backend.exception.domain.UserNotFoundException;
+import de.voelkldennis.backend.exception.domain.UsernameExistException;
 import de.voelkldennis.backend.jwt.utility.HttpResponse;
 import de.voelkldennis.backend.jwt.utility.JWTTokenProvider;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -42,6 +46,17 @@ public class UserController extends ExceptionHandling {
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) throws
+            UserNotFoundException,
+            EmailExistException,
+            MessagingException,
+            UsernameExistException {
+        User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
+        return new ResponseEntity<>(newUser, OK);
+    }
+
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
