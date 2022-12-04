@@ -2,7 +2,6 @@ package de.voelkldennis.backend.domain;
 
 import de.voelkldennis.backend.domain.email.EmailService;
 import de.voelkldennis.backend.domain.enumeration.Role;
-import de.voelkldennis.backend.domain.enumeration.UserService;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.EmailNotFoundException;
 import de.voelkldennis.backend.exception.domain.UserNotFoundException;
@@ -62,7 +61,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private String setProfileImageUrl(String username) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH + username + DOT + JPG_EXTENSION).toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH
+                + username + DOT + JPG_EXTENSION).toUriString();
     }
 
     private void validateLoginAttempt(User user) {
@@ -170,15 +170,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(String currentUsername,
-                           String newFirstName,
-                           String newLastName,
-                           String newUsername,
-                           String newEmail,
-                           String role,
-                           boolean isNonLocked,
-                           boolean isActive,
-                           MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException {
+    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException {
         User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
         currentUser.setFirstName(newFirstName);
         currentUser.setLastName(newLastName);
