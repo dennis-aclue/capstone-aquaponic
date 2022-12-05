@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -62,18 +61,8 @@ public class SecurityConfiguration {
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests()
-                //.antMatchers(HttpMethod.DELETE).hasRole(String.valueOf(SUPER_ADMIN_AUTHORITIES))
-                //.antMatchers(HttpMethod.POST).hasAnyRole(String.valueOf(USER_AUTHORITIES))
-                //.antMatchers(HttpMethod.PUT).hasAnyRole(String.valueOf(USER_AUTHORITIES))
-                //.antMatchers(HttpMethod.GET).hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
-                //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
                 .antMatchers("/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**").permitAll()
-                .antMatchers(HttpMethod.GET).hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
-                //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").authenticated()
-                .antMatchers(HttpMethod.POST).hasAnyRole("USER_READ")
-                .antMatchers(HttpMethod.PUT).hasAnyRole("USER_READ")
-                .antMatchers(HttpMethod.DELETE).hasRole("USER_READ")
-                //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").hasRole("USER_READ")
+                .antMatchers("/projects/**").hasRole("USER")
                 .and()
                 .httpBasic()
                 .and()
