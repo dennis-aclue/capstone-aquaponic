@@ -9,6 +9,7 @@ For the initial project, with backend, frontend on localhost
 5. Maybe you have to install inside frontend folder
    - npm install axios
    - npm install --save react-router-dom
+   - npm install react-validation validator
 
 MongoDb name:   
 If you want to change the database name, go inside "backend/src/main/resources" and change the name inside the aquaponic application.properties

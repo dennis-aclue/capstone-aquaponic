@@ -23,6 +23,11 @@ export default function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/freeGallery" element={<FreeGallery/>}/>
                     <Route path="/freeProjectCard/:projectId" element={<FreeProjectCard/>}/>
+                    <Route path="/" element={<HomePage/>}/>
+                    <Route path="/memberOverview" element={<MemberOverview/>}/>
+                    <Route path="/projectOverview" element={<ProjectOverview/>}/>
+                    <Route path="/addProject" element={<AddProject/>}/>
+                    <Route path="/projectCard/:projectId" element={<ProjectCard/>}/>
                 </Routes>
             </main>
         </>;
