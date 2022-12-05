@@ -28,6 +28,7 @@ export default function ProjectOverview() {
         </header>
         <nav className="navbar">
             <Link to="/">Home</Link>
+            <Link to="/memberOverview">Member</Link>
             <Link to="/freeGallery">Gallery</Link>
         </nav>
         <section>

@@ -6,11 +6,10 @@ export default function Login() {
 
     const navigate = useNavigate();
     const loginUrl = '/user/login';
-    const [messageStatus, setMessageStatus] = useState('')
     const [isLoading, setIsLoading] = useState(false);
 
-    const setGoToMemberOverview = () => {
-        navigate("/memberOverview")
+    const setGoToProjectOverview = () => {
+        navigate("/projectOverview")
     }
 
     useEffect(() => {
@@ -26,10 +25,10 @@ export default function Login() {
     function postNewUser(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         axios.post(loginUrl, loginUser)
-            .then(function (response) {
+            .then(function () {
                 setIsLoading(true)
             })
-            .then(() => setTimeout(() => setGoToMemberOverview(), 500))
+            .then(() => setTimeout(() => setGoToProjectOverview(), 500))
             .catch((e) => console.log("POST ERROR: " + e))
     }
 

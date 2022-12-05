@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Route, Routes} from "react-router";
 import HomePage from "./pages/Homes";
 import ProjectOverview from "./pages/projects/ProjectOverview";
@@ -12,30 +12,35 @@ import MemberOverview from "./pages/users/MemberOverview";
 
 export default function App() {
 
-    const [userName, setUserDetails] = useState<string>();
+    /* const [userName, setUserDetails] = useState<string>();
 
-    if (userName === undefined) {
-        return <>
-            <main>
-                <Routes>
-                    <Route path={"/"} element={<HomePage/>}></Route>
-                    <Route path="/registration" element={<Registration/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/freeGallery" element={<FreeGallery/>}/>
-                    <Route path="/freeProjectCard/:projectId" element={<FreeProjectCard/>}/>
-                    <Route path="/" element={<HomePage/>}/>
-                    <Route path="/memberOverview" element={<MemberOverview/>}/>
-                    <Route path="/projectOverview" element={<ProjectOverview/>}/>
-                    <Route path="/addProject" element={<AddProject/>}/>
-                    <Route path="/projectCard/:projectId" element={<ProjectCard/>}/>
-                </Routes>
-            </main>
-        </>;
-    }
+     if (userName === undefined) {
+         return <>
+             <main>
+                 <Routes>
+                     <Route path={"/"} element={<HomePage/>}></Route>
+                     <Route path="/registration" element={<Registration/>}/>
+                     <Route path="/login" element={<Login/>}/>
+                     <Route path="/freeGallery" element={<FreeGallery/>}/>
+                     <Route path="/freeProjectCard/:projectId" element={<FreeProjectCard/>}/>
+                     <Route path="/" element={<HomePage/>}/>
+                     <Route path="/memberOverview" element={<MemberOverview/>}/>
+                     <Route path="/projectOverview" element={<ProjectOverview/>}/>
+                     <Route path="/addProject" element={<AddProject/>}/>
+                     <Route path="/projectCard/:projectId" element={<ProjectCard/>}/>
+                 </Routes>
+             </main>
+         </>;
+     }*/
 
     return <>
         <main>
             <Routes>
+                <Route path={"/"} element={<HomePage/>}></Route>
+                <Route path="/registration" element={<Registration/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/freeGallery" element={<FreeGallery/>}/>
+                <Route path="/freeProjectCard/:projectId" element={<FreeProjectCard/>}/>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/memberOverview" element={<MemberOverview/>}/>
                 <Route path="/projectOverview" element={<ProjectOverview/>}/>
