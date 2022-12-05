@@ -66,13 +66,16 @@ public class SecurityConfiguration {
         http.csrf().disable().cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests()
-                .antMatchers(HttpMethod.DELETE).hasRole(String.valueOf(SUPER_ADMIN_AUTHORITIES))
+                //.antMatchers(HttpMethod.DELETE).hasRole(String.valueOf(SUPER_ADMIN_AUTHORITIES))
                 //.antMatchers(HttpMethod.POST).hasAnyRole(String.valueOf(USER_AUTHORITIES))
-                .antMatchers(HttpMethod.PUT).hasAnyRole(String.valueOf(USER_AUTHORITIES))
+                //.antMatchers(HttpMethod.PUT).hasAnyRole(String.valueOf(USER_AUTHORITIES))
+                //.antMatchers(HttpMethod.GET).hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
+                //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
+                .antMatchers("/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**").permitAll()
                 .antMatchers(HttpMethod.GET).hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
-                .antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
-                .antMatchers("/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**").anonymous()
-                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.POST).hasAnyRole(String.valueOf(USER_AUTHORITIES))
+                .antMatchers(HttpMethod.PUT).hasAnyRole(String.valueOf(USER_AUTHORITIES))
+                .antMatchers(HttpMethod.DELETE).hasRole(String.valueOf(SUPER_ADMIN_AUTHORITIES))
                 .and()
                 .httpBasic()
                 .and()
@@ -83,6 +86,7 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 
 //    @Bean
 //    public AuthenticationManager authenticationManagerBean() throws Exception {

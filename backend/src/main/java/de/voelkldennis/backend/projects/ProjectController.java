@@ -1,7 +1,6 @@
 package de.voelkldennis.backend.projects;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,11 +12,10 @@ import java.util.Optional;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private AuthenticationManager authenticationManager;
 
-    public ProjectController(ProjectService projectService, AuthenticationManager authenticationManager) {
+
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
-        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/addProject")
