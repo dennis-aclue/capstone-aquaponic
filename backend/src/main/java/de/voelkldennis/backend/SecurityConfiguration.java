@@ -15,11 +15,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static de.voelkldennis.backend.jwt.constant.Authority.SUPER_ADMIN_AUTHORITIES;
-import static de.voelkldennis.backend.jwt.constant.Authority.USER_AUTHORITIES;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
@@ -27,23 +26,20 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
-    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private UserDetailsService userDetailsService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
     public SecurityConfiguration(JwtAuthorizationFilter jwtAuthorizationFilter,
                                  JwtAccessDeniedHandler jwtAccessDeniedHandler,
                                  JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                                 @Qualifier("userDetailsService") UserDetailsService userDetailsService,
-                                 BCryptPasswordEncoder bCryptPasswordEncoder) {
+                                 @Qualifier("userDetailsService") UserDetailsService userDetailsService) {
         this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Bean
@@ -56,10 +52,10 @@ public class SecurityConfiguration {
                 .build();
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -73,9 +69,11 @@ public class SecurityConfiguration {
                 //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
                 .antMatchers("/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**").permitAll()
                 .antMatchers(HttpMethod.GET).hasAnyRole("USER_READ", "USER_UPDATE", "USER_UPDATE", "USER_DELETE")
-                .antMatchers(HttpMethod.POST).hasAnyRole(String.valueOf(USER_AUTHORITIES))
-                .antMatchers(HttpMethod.PUT).hasAnyRole(String.valueOf(USER_AUTHORITIES))
-                .antMatchers(HttpMethod.DELETE).hasRole(String.valueOf(SUPER_ADMIN_AUTHORITIES))
+                //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").authenticated()
+                .antMatchers(HttpMethod.POST).hasAnyRole("USER_READ")
+                .antMatchers(HttpMethod.PUT).hasAnyRole("USER_READ")
+                .antMatchers(HttpMethod.DELETE).hasRole("USER_READ")
+                //.antMatchers("/api/projects/memberOverview/**", "/api/projects/projectOverview/**", "/api/projects/addProject/**", "/api/projects/projectCard/**").hasRole("USER_READ")
                 .and()
                 .httpBasic()
                 .and()
@@ -87,35 +85,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
 }
-/*
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.DELETE)
-                .hasRole("ADMIN")
-                .antMatchers("/admin/**")
-                .hasAnyRole("ADMIN")
-                .antMatchers("/user/**")
-                .hasAnyRole("USER", "ADMIN")
-                .antMatchers("/login/**")
-                .anonymous()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        return http.build();
-    }
-*/
