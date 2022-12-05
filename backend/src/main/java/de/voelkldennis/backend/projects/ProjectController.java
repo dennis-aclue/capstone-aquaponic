@@ -1,6 +1,5 @@
 package de.voelkldennis.backend.projects;
 
-import de.voelkldennis.backend.exception.domain.ExceptionHandling;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = {"/", "/api/projects"})
-public class ProjectController extends ExceptionHandling {
+public class ProjectController {
 
     private final ProjectService projectService;
     private AuthenticationManager authenticationManager;
