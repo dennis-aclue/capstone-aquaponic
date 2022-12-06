@@ -111,6 +111,7 @@ class ProjectControllerTest {
     @DirtiesContext
     @Test
     @WithMockUser(username = "admin", roles = "read", authorities = {"USER_AUTHORITIES"})
+    //@WithMockUser
     void getAllProjectsAndReturnOk() throws Exception {
         //given&when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/projects"))

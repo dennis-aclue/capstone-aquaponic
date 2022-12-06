@@ -8,7 +8,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import de.voelkldennis.backend.domain.UserPrincipal;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,8 +29,8 @@ import static java.util.Arrays.stream;
 public class JWTTokenProvider {
 
     // need to decode actual token (Keep this top secret)
-    @Value(value = "${jwt.secret}")
-    private String secret;
+    //@Value(value = "${jwt.secret}")
+    private String secret = "secretPassword";
 
     public String generateJwtToken(UserPrincipal userPrincipal) {
         String[] claims = getClaimsFromUser(userPrincipal);
