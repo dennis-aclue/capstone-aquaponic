@@ -1,87 +1,77 @@
 import {Link, useNavigate} from "react-router-dom";
-import React, {FormEvent, useEffect, useState} from "react"
-import axios from "axios";
+import React, {useState} from "react"
+import AuthService from "../auth.service";
 
-export default function Login() {
+const Login = () => {
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
     const navigate = useNavigate();
-    const loginUrl = '/user/login';
-    const [isLoading, setIsLoading] = useState(false);
 
-    const setGoToProjectOverview = () => {
-        navigate("/projectOverview")
-    }
-
-    useEffect(() => {
-    }, [])
-
-    const [loginUser, setLoginUser] = useState(
-        {
-            username: "",
-            password: ""
+    const handleLogin = async (e: any) => {
+        e.preventDefault();
+        try {
+            await AuthService.login(username, password).then(
+                () => {
+                    navigate("/");
+                    window.location.reload();
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+        } catch (err) {
+            console.log(err);
         }
-    );
+    };
 
-    function postNewUser(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-        axios.post(loginUrl, loginUser)
-            .then(function () {
-                setIsLoading(true)
-            })
-            .then(() => setTimeout(() => setGoToProjectOverview(), 500))
-            .catch((e) => console.log("POST ERROR: " + e))
-    }
+    return (
+        <div className="flexColumnCenter">
 
-    function handleChange(event: any) {
-        setLoginUser({
-            ...loginUser,
-            [event.target.name]: event.target.value
-        })
-    }
+            <header className="headerStandardStyle">
+                <h1>User Login</h1>
+            </header>
+            <nav className="navbar">
+                <Link to="/">Home</Link>
+                <Link to="/freeGallery">Gallery</Link>
+            </nav>
+            <form className="addProjectForm" onSubmit={handleLogin}>
+                <label className="formFieldLabel" htmlFor={"username"}>
+                    Username:
+                </label>
+                <input
+                    type="text"
+                    id="username"
+                    className="formFieldInputUsername"
+                    placeholder="Enter your username"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <label className="formFieldLabel" htmlFor={"password"}>
+                    Password:
+                </label>
+                <input
+                    type="text"
+                    id="password"
+                    className="formFieldInputPassword"
+                    placeholder="Enter your password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
 
-    return <div className="flexColumnCenter">
+                <p>
+                    <button type="submit">Log in</button>
+                </p>
+            </form>
 
-        <header className="headerStandardStyle">
-            <h1>User Login</h1>
-        </header>
-        <nav className="navbar">
-            <Link to="/">Home</Link>
-            <Link to="/freeGallery">Gallery</Link>
-        </nav>
-        <form className="addProjectForm" onSubmit={postNewUser}>
-            <label className="formFieldLabel" htmlFor={"username"}>
-                Username:
-            </label>
-            <input
-                type="text"
-                id="username"
-                className="formFieldInputUsername"
-                placeholder="Enter your username"
-                name="username"
-                value={loginUser.username}
-                onChange={handleChange}
-            />
-            <label className="formFieldLabel" htmlFor={"password"}>
-                Password:
-            </label>
-            <input
-                type="text"
-                id="password"
-                className="formFieldInputPassword"
-                placeholder="Enter your password"
-                name="password"
-                value={loginUser.password}
-                onChange={handleChange}
-            />
+            <Link to="/registration">
+                Registration page
+            </Link>
 
-            <p className="addProjectButton">
-                <button disabled={isLoading}>Login</button>
-            </p>
-        </form>
-
-        <Link to="/registration">
-            Registration page
-        </Link>
-
-    </div>
+        </div>)
 }
+
+export default Login;
