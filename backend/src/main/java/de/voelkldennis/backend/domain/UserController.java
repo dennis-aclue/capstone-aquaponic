@@ -32,7 +32,6 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 @RestController
 @RequestMapping(path = {"/", "/user"})
 public class UserController extends ExceptionHandling {
-    public static final String EMAIL_SENT = "An email with a new password was sent to: ";
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
@@ -45,9 +44,9 @@ public class UserController extends ExceptionHandling {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
+    private ResponseEntity<HttpResponse> response() {
+        return new ResponseEntity<>(new HttpResponse(HttpStatus.OK.value(), HttpStatus.OK, HttpStatus.OK.getReasonPhrase().toUpperCase(),
+                UserController.USER_DELETED_SUCCESSFULLY), HttpStatus.OK);
     }
 
     private HttpHeaders getJwtHeader(UserPrincipal user) {
@@ -81,7 +80,7 @@ public class UserController extends ExceptionHandling {
 
     // Add a internal User
     @PostMapping("/add")
-    public ResponseEntity<User> addNewUser(UserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException {
+    public ResponseEntity<User> addNewUser(UserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException {
         User newUserDTO = userService.addNewUser(userDTO);
         return new ResponseEntity<>(newUserDTO, OK);
     }
@@ -112,7 +111,7 @@ public class UserController extends ExceptionHandling {
     @PreAuthorize("hasAnyAuthority('user:delete')")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") String id) throws IOException {
         userService.deleteUser(id);
-        return response(OK, USER_DELETED_SUCCESSFULLY);
+        return response();
     }
 
     @GetMapping(path = "/image/{username}/{fileName}", produces = IMAGE_JPEG_VALUE)
