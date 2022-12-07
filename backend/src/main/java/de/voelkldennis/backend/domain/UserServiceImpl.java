@@ -1,6 +1,5 @@
 package de.voelkldennis.backend.domain;
 
-import de.voelkldennis.backend.domain.email.EmailService;
 import de.voelkldennis.backend.domain.enumeration.Role;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.EmailNotFoundException;
@@ -43,7 +42,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
     private LoginAttemptService loginAttemptService;
-    private EmailService emailService;
 
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
         if (profileImage != null) {
@@ -127,13 +125,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserServiceImpl(
             UserRepository userRepository,
             BCryptPasswordEncoder passwordEncoder,
-            LoginAttemptService loginAttemptService,
-            EmailService emailService) {
+            LoginAttemptService loginAttemptService) {
         this.LOGGER = LOGGER;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
-        this.emailService = emailService;
     }
 
     @Override
