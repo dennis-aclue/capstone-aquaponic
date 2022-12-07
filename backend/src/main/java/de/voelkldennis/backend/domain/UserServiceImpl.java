@@ -187,7 +187,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             user.setLastLoginDate(new Date());
             userRepository.save(user);
             UserPrincipal userPrincipal = new UserPrincipal(user);
-            logger.info(String.format(NO_USER_FOUND_BY_USERNAME, username));
+            logger.info(String.format(LOGIN_SUCCESSFUL, username));
             return userPrincipal;
         }
     }
