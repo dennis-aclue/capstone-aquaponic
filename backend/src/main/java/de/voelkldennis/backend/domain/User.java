@@ -1,21 +1,28 @@
 package de.voelkldennis.backend.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
 @Document("users")
+@RequiredArgsConstructor
 public class User implements Serializable {
 
     @Id
     private String id;                //id for database, primary key
     private String userId;
+    @NotBlank(message = "First name is required")
     private String firstName;
+    @NotBlank(message = "Last name is required")
     private String lastName;
+    @NotBlank(message = "Username is required")
     private String username;
     private String password;
+    @NotBlank(message = "Email is required")
     private String email;
     private String profileImageUrl;
     private Date lastLoginDate;
@@ -26,26 +33,6 @@ public class User implements Serializable {
     private boolean isActive;
     private boolean isNotLocked;    //Is the user locked or not
 
-    public User() {
-    }
-
-    public User(String id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginDate, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNotLocked) {
-        this.id = id;
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.profileImageUrl = profileImageUrl;
-        this.lastLoginDate = lastLoginDate;
-        this.lastLoginDateDisplay = lastLoginDateDisplay;
-        this.joinDate = joinDate;
-        this.role = role;
-        this.authorities = authorities;
-        this.isActive = isActive;
-        this.isNotLocked = isNotLocked;
-    }
 
     public String getId() {
         return id;
