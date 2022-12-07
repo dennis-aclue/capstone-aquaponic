@@ -6,6 +6,7 @@ const login = (username: string, password: string) => {
         password
     })
         .then((response) => {
+                localStorage.setItem('user', JSON.stringify(response.data));
                 if (response.headers.jwttoken) {
                     localStorage.setItem('jwt-token', JSON.stringify(response.headers.jwttoken));
                     sessionStorage.setItem('jwt-token', JSON.stringify(response.headers.jwttoken));
@@ -15,8 +16,11 @@ const login = (username: string, password: string) => {
         );
 }
 
+const getUserFromLocalCache = () => {
+    return JSON.parse(localStorage.getItem('user') || '{}');
+}
+
 const logout = () => {
-    //localStorage.removeItem("jwt-token");
     sessionStorage.removeItem("jwt-token");
     console.log("logout: " + getCurrentToken());
 };
@@ -26,10 +30,12 @@ const getCurrentToken = () => {
     return JSON.parse(sessionStorage.getItem('jwt-token') || '{}');
 };
 
+
 const authService = {
     login,
     logout,
     getCurrentToken,
+    getUserFromLocalCache,
 };
 
 export default authService;

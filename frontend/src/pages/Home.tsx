@@ -3,16 +3,9 @@ import '../style/home.css';
 
 export default function HomePage() {
 
-/*    const Navigation = () => (
-        <nav className="nav">
-            <Link to="/projectOverview">Project Overview</Link>
-        </nav>
-    );*/
-
     return <div className="flexColumnCenter">
         <header>
             <h1>Welcome everybody!</h1>
-            {/*<Navigation/>*/}
         </header>
         <main className="mainPage">
             <img className="mainLogo" src={process.env.PUBLIC_URL + '/aquaponicMain.png'} alt="Aquaponic"/>

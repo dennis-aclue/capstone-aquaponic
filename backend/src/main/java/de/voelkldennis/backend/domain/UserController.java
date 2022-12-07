@@ -33,9 +33,9 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 @RequestMapping(path = {"/", "/user"})
 public class UserController extends ExceptionHandling {
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
-    private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final JWTTokenProvider jwtTokenProvider;
+    private AuthenticationManager authenticationManager;
+    private UserService userService;
+    private JWTTokenProvider jwtTokenProvider;
 
     @Autowired
     public UserController(AuthenticationManager authenticationManager, UserService userService, JWTTokenProvider jwtTokenProvider) {

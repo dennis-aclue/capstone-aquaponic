@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final LoginAttemptService loginAttemptService;
     private final ProjectUtils projectUtils;
 
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
@@ -59,14 +58,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private String setProfileImageUrl(String username) {
         return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH
                 + username + DOT + JPG_EXTENSION).toUriString();
-    }
-
-    private void validateLoginAttempt(User user) {
-        if (user.isNotLocked()) {
-            user.setNotLocked(!loginAttemptService.hasExceededMaxAttempts(user.getUsername()));
-        } else {
-            loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
-        }
     }
 
     private Role getRoleEnumName(String role) {
@@ -122,10 +113,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserServiceImpl(
             UserRepository userRepository,
             BCryptPasswordEncoder passwordEncoder,
-            LoginAttemptService loginAttemptService, ProjectUtils projectUtils) {
+            ProjectUtils projectUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.loginAttemptService = loginAttemptService;
         this.projectUtils = projectUtils;
     }
 
@@ -182,7 +172,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             logger.error(String.format(NO_USER_FOUND_BY_USERNAME, username));
             throw new UsernameNotFoundException(String.format(NO_USER_FOUND_BY_USERNAME, username));
         } else {
-            validateLoginAttempt(user);
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepository.save(user);
