@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const login = (username: string, password: string) => {
     return axios.post("/user/login", {
         username,
@@ -16,9 +15,8 @@ const login = (username: string, password: string) => {
         );
 }
 
-
 const logout = () => {
-    localStorage.removeItem("jwt-token");
+    //localStorage.removeItem("jwt-token");
     sessionStorage.removeItem("jwt-token");
     console.log("logout: " + getCurrentToken());
 };
@@ -27,7 +25,6 @@ const getCurrentToken = () => {
     //return JSON.parse(localStorage.getItem('jwt-token') || sessionStorage.getItem('jwt-token')
     return JSON.parse(sessionStorage.getItem('jwt-token') || '{}');
 };
-
 
 const authService = {
     login,

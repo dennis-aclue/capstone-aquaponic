@@ -1,4 +1,4 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import '../../style/projects/projectCard.css';
@@ -63,11 +63,6 @@ const ProjectCard = () => {
 
     return <div className="flexColumnCenter">
         <header className="headerStandardStyle"></header>
-        <nav className="navbar">
-            <Link to="/">Home</Link>
-            <Link to="/projectOverview">Projects</Link>
-        </nav>
-
         {project && isLoading && (
             <form className='project__card'>
                 <p className="projectCard__element label">Project name</p>

@@ -26,11 +26,6 @@ export default function ProjectOverview() {
         <header className="headerStandardStyle">
             <h1>Project Overview</h1>
         </header>
-        <nav className="navbar">
-            <Link to="/">Home</Link>
-            <Link to="/memberOverview">Member</Link>
-            <Link to="/freeGallery">Gallery</Link>
-        </nav>
         <section>
             <ul className="projectCard">{projects.map((projects: any) => <Link
                 to={"/projectCard/" + projects.projectId}>
