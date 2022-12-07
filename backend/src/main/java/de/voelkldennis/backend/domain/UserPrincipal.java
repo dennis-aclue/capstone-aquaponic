@@ -9,7 +9,7 @@ import java.util.Collection;
 import static java.util.Arrays.stream;
 
 public class UserPrincipal implements UserDetails {
-    private final User user;
+    private User user;
 
     public UserPrincipal(User user) {
         this.user = user;

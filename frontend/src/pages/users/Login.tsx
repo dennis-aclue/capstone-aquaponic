@@ -18,11 +18,11 @@ const Login = () => {
                     window.location.reload();
                 },
                 (error) => {
-                    console.log(error);
+                    console.log("Login Error", error);
                 }
             );
         } catch (err) {
-            console.log(err);
+            console.log("Login Error", err);
         }
     };
 

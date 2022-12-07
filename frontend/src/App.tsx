@@ -16,16 +16,16 @@ function App() {
     const [currentUserToken, setCurrentUserToken] = useState(undefined);
     const [startLogOut, setStartLogOut] = useState(true);
     const navigate = useNavigate();
+    const [getUserName, setUserName] = useState("");
 
     useEffect(() => {
-        let storageToken = localStorage.getItem("user");
-        console.log("storageToken: " + storageToken);
-
+        let username = (JSON.parse(localStorage.getItem('user') || '{}').username);
+        //console.log(JSON.parse(localStorage.getItem('user') || '{}').username);
+        console.log(username);
         const token = AuthService.getCurrentToken();
         console.log("token: " + token);
         if (token) {
             setCurrentUserToken(token);
-            console.log("token: " + token);
         }
     }, []);
 
