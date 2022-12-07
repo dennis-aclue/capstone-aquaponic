@@ -95,7 +95,7 @@ class ProjectControllerTest {
                                 "password": "test"}
                                 """))
                 //.andExpect(status().isOk());
-                .andExpect(status().is(400));
+                .andExpect(status().is(401));
 //
 //        //given & when
 //        mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
