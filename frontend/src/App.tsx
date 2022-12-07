@@ -18,13 +18,16 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        let storageToken = localStorage.getItem("user");
+        console.log("storageToken: " + storageToken);
+
         const token = AuthService.getCurrentToken();
+        console.log("token: " + token);
         if (token) {
             setCurrentUserToken(token);
             console.log("token: " + token);
         }
     }, []);
-
 
     const logOut = () => {
         setCurrentUserToken(undefined);
@@ -32,7 +35,6 @@ function App() {
         navigate("/");
         AuthService.logout();
     };
-
 
     const askToLogOut = () => {
         setStartLogOut(false);
@@ -70,26 +72,31 @@ function App() {
         </nav>
     );
 
-    const [user, setUser] = useState(null);
-
-
-    /*    Configure Protected Routes with Token
-
-    const handleLogin = () =>
-            AuthService.getCurrentToken().then((response) => {
-                setUser(response.data);
-            }
-        );
-    */
     const ProtectedRoute = ({redirectPath = '/'}) => {
-        if (!user) {
+        if (currentUserToken === undefined) {
             return <Navigate to={redirectPath} replace/>;
         }
-        return <Outlet/>;
+        return < Outlet/>;
+    };
+
+    const logInNavigation = () => {
+        if (currentUserToken !== undefined) {
+            return (
+                <nav className="nav">
+                    {currentUserToken && startLogOut &&
+                        (<Link to="/projectOverview">Projects</Link>)
+                    }
+                    {currentUserToken && startLogOut &&
+                        (<Link to="/memberOverview">Member</Link>)
+                    }
+                </nav>
+            );
+        }
     };
 
     return <>
         <main>
+            <div>{logInNavigation()}</div>
             <Routes>
                 <Route index element={<HomePage/>}/>
                 <Route path={"/"} element={<HomePage/>}/>
