@@ -1,11 +1,10 @@
 package de.voelkldennis.backend.domain;
 
+import de.voelkldennis.backend.ProjectUtils;
 import de.voelkldennis.backend.domain.enumeration.Role;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.UserNotFoundException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
-import jakarta.mail.MessagingException;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +36,18 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Transactional
 @Qualifier("userDetailsService")
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final LoginAttemptService loginAttemptService;
+    private final ProjectUtils projectUtils;
 
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
         if (profileImage != null) {
             Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
             if (Files.exists(userFolder)) {
                 Files.createDirectories(userFolder);
-                LOGGER.info(DIRECTORY_CREATED);
+                logger.info(DIRECTORY_CREATED);
             }
             Files.deleteIfExists(Paths.get(userFolder + user.getUsername() + DOT + JPG_EXTENSION));
             Files.copy(profileImage.getInputStream(), userFolder.resolve(user.getUsername() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
@@ -82,11 +82,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(10);
+        return projectUtils.generateUUID();
     }
 
     private String generateUserId() {
-        return RandomStringUtils.randomNumeric(10);
+        return projectUtils.generateUUID();
     }
 
     private User validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail)
@@ -122,10 +122,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserServiceImpl(
             UserRepository userRepository,
             BCryptPasswordEncoder passwordEncoder,
-            LoginAttemptService loginAttemptService) {
+            LoginAttemptService loginAttemptService, ProjectUtils projectUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
+        this.projectUtils = projectUtils;
     }
 
     @Override
@@ -178,15 +179,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            LOGGER.error("%s%s".formatted(NO_USER_FOUND_BY_USERNAME, username));
-            throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
+            logger.error(String.format(NO_USER_FOUND_BY_USERNAME, username));
+            throw new UsernameNotFoundException(String.format(NO_USER_FOUND_BY_USERNAME, username));
         } else {
             validateLoginAttempt(user);
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepository.save(user);
             UserPrincipal userPrincipal = new UserPrincipal(user);
-            LOGGER.info(FOUND_USER_BY_USERNAME + username);
+            logger.info(String.format(NO_USER_FOUND_BY_USERNAME, username));
             return userPrincipal;
         }
     }
@@ -196,8 +197,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throws
             UserNotFoundException,
             UsernameExistException,
-            EmailExistException,
-            MessagingException {
+            EmailExistException {
         validateNewUsernameAndEmail(EMPTY, userDTO.username(), userDTO.email());
         User user = new User();
         user.setUsername(userDTO.username());
@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRole(ROLE_USER.name());
         user.setAuthorities(ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(userDTO.username()));
-        LOGGER.info("New user password: %s".formatted(password));
+        logger.info(String.format(NEW_USER_PASSWORD, password));
         return userRepository.save(user);
     }
 
