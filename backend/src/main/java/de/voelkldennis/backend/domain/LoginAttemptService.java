@@ -3,6 +3,8 @@ package de.voelkldennis.backend.domain;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutionException;
@@ -14,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 public class LoginAttemptService {
     private static final int MAXIMUM_NUMBER_OF_ATTEMPTS = 5;
     private static final int ATTEMPT_INCREMENT = 1;
-    private LoadingCache<String, Integer> loginAttemptsCache;
+    private final LoadingCache<String, Integer> loginAttemptsCache;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public LoginAttemptService() {
         super();
@@ -22,7 +25,7 @@ public class LoginAttemptService {
                 .newBuilder()
                 .expireAfterWrite(15, TimeUnit.MINUTES)
                 .maximumSize(100)
-                .build(new CacheLoader<String, Integer>() {
+                .build(new CacheLoader<>() {
                     public Integer load(String key) {
                         return 0;
                     }
@@ -39,7 +42,7 @@ public class LoginAttemptService {
         try {
             attempts = ATTEMPT_INCREMENT + loginAttemptsCache.get(username);
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            logger.error("***** :: Exception addUserToLoginAttemptCache :: ***** {}", e.getMessage());
         }
         loginAttemptsCache.put(username, attempts);
     }
@@ -48,7 +51,7 @@ public class LoginAttemptService {
         try {
             return loginAttemptsCache.get(username) >= MAXIMUM_NUMBER_OF_ATTEMPTS;
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            logger.error("***** :: Exception hasExceededMaxAttempts :: ***** {}", e.getMessage());
         }
         return false;
     }

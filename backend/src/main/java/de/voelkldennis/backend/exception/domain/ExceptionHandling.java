@@ -14,8 +14,6 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.NoResultException;
@@ -107,11 +105,6 @@ public class ExceptionHandling implements ErrorController {
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus,
                 httpStatus.getReasonPhrase().toUpperCase(), message), httpStatus);
-    }
-
-    @RequestMapping(path = "/error", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<HttpResponse> notFound404() {
-        return createHttpResponse(NOT_FOUND, "There is no mapping for this URL");
     }
 
 }
