@@ -1,4 +1,4 @@
-package de.voelkldennis.backend.projects;
+package de.voelkldennis.backend;
 
 import org.junit.jupiter.api.Test;
 

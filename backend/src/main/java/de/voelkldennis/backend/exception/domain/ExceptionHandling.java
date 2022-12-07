@@ -15,6 +15,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.NoResultException;
@@ -33,9 +34,6 @@ public class ExceptionHandling implements ErrorController {
     private static final String ACCOUNT_DISABLED = "Your account has been disabled. If this is an error, please contact administration";
     private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
     private static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
-    //private static final String URL_MAPPING_NOT_FOUND = "There is no mapping for this URL";
-    public static final String ERROR_PATH = "/error";
-
 
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException() {
@@ -111,14 +109,9 @@ public class ExceptionHandling implements ErrorController {
                 httpStatus.getReasonPhrase().toUpperCase(), message), httpStatus);
     }
 
-    @RequestMapping(ERROR_PATH)
+    @RequestMapping(path = "/error", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<HttpResponse> notFound404() {
         return createHttpResponse(NOT_FOUND, "There is no mapping for this URL");
-    }
-
-    //@Override
-    public String getErrorPath() {
-        return ERROR_PATH;
     }
 
 }
