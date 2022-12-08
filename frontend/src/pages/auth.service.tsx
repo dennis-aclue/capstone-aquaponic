@@ -22,12 +22,13 @@ const getUserFromLocalCache = () => {
 
 const logout = () => {
     sessionStorage.removeItem("jwt-token");
+    localStorage.clear();
     console.log("logout: " + getCurrentToken());
 };
 
 const getCurrentToken = () => {
     //return JSON.parse(localStorage.getItem('jwt-token') || sessionStorage.getItem('jwt-token')
-    return JSON.parse(sessionStorage.getItem('jwt-token') || '{}');
+    return JSON.parse(sessionStorage.getItem('jwt-token') || "null");
 };
 
 
