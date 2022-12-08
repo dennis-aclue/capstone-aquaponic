@@ -16,7 +16,6 @@ function App() {
     const [currentUserToken, setCurrentUserToken] = useState(undefined);
     const [startLogOut, setStartLogOut] = useState(true);
     const navigate = useNavigate();
-    const [getUserName, setUserName] = useState("");
 
     useEffect(() => {
         let username = (JSON.parse(localStorage.getItem('user') || '{}').username);
