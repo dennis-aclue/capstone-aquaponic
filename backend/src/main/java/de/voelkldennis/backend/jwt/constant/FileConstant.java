@@ -1,6 +1,6 @@
 package de.voelkldennis.backend.jwt.constant;
 
-public class FileConstant {
+public record FileConstant() {
     public static final String USER_IMAGE_PATH = "/user/image/";
     public static final String JPG_EXTENSION = "jpg";
     public static final String USER_FOLDER = System.getProperty("user.home") + "/supportportal/user/";

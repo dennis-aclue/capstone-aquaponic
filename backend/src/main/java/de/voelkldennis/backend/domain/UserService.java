@@ -3,7 +3,6 @@ package de.voelkldennis.backend.domain;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.UserNotFoundException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
-import jakarta.mail.MessagingException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public interface UserService {
 
-    User register(UserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException;
+    User register(UserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException;
 
     List<User> getUsers();
 

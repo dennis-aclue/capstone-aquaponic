@@ -1,7 +1,7 @@
 package de.voelkldennis.backend.jwt.constant;
 import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
 
-public class Authority {
+public record Authority() {
 
     public static final String[] USER_AUTHORITIES = {USER_READ};
     public static final String[] MANAGER_AUTHORITIES = {USER_READ, USER_UPDATE};

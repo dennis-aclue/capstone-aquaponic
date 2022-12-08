@@ -6,7 +6,6 @@ import de.voelkldennis.backend.exception.domain.UserNotFoundException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
 import de.voelkldennis.backend.jwt.utility.HttpResponse;
 import de.voelkldennis.backend.jwt.utility.JWTTokenProvider;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -72,7 +71,6 @@ public class UserController extends ExceptionHandling {
     public ResponseEntity<User> register(@RequestBody @Valid UserDTO userDTO) throws
             UserNotFoundException,
             EmailExistException,
-            MessagingException,
             UsernameExistException {
         User newUserDTO = userService.register(userDTO);
         return new ResponseEntity<>(newUserDTO, OK);
