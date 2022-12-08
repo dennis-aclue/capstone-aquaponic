@@ -47,11 +47,6 @@ export default function AddProject() {
 
     }
 
-    function handleChange(event: any) {
-        event.preventDefault()
-        postNewProject(event)
-    }
-
     return <div className="flexColumnCenter">
 
         <header className="headerStandardStyle">
