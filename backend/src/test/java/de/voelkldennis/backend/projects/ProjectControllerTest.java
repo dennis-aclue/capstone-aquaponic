@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -88,14 +87,6 @@ class ProjectControllerTest {
         //System.out.println(this.user.getPassword());
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"username": "test",
-                                "password": "test"}
-                                """))
-                //.andExpect(status().isOk());
-                .andExpect(status().is(400));
 //
 //        //given & when
 //        mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
@@ -114,46 +105,18 @@ class ProjectControllerTest {
         //@WithMockUser(username = "admin", roles = "read", authorities = {"USER_AUTHORITIES"})
         //@WithMockUser
     void getAllProjectsAndReturnOk() throws Exception {
-        //given&when
-/*        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[]"));*/
+
     }
 
     @DirtiesContext
     @Test
     void getProjectWithIdAndReturnOk() throws Exception {
 
-/*        String content = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                    "projectName": "aquaponic_test_name",
-                                    "shortDescription": "aquaponic_test_description"
-                                }
-                                """))
-                //.andExpect(status().is(201))
-                .andExpect(status().is(405))
-                .andReturn().getResponse().getContentAsString();
-
-        Project project = objectMapper.readValue(content, Project.class);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectCard/" + project.projectId()))
-                .andExpect(status().is(200))
-                .andExpect(content().json("""
-                        {
-                            "projectId": "<ID>",
-                            "projectName": "aquaponic_test_name",
-                            "shortDescription": "aquaponic_test_description",
-                            "projectVisibility": false
-                        }
-                        """.replace("<ID>", project.projectId())));*/
     }
 
     @Test
     @DirtiesContext
     void deleteProjectWithIdAndReturnNoContent() throws Exception {
-
 
 
     }
