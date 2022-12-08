@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static de.voelkldennis.backend.jwt.constant.SecurityConstant.PUBLIC_URLS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
@@ -64,7 +65,7 @@ public class SecurityConfiguration {
         http.csrf().disable().cors().disable()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests()
-                .antMatchers("/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**").permitAll()
+                .antMatchers(PUBLIC_URLS).permitAll()
                 .antMatchers("/projects/**").hasRole("USER")
                 .and()
                 .httpBasic()
