@@ -17,7 +17,7 @@
         <java.version>19</java.version>
         <sonar.organization>dennis-aclue</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.exclusions>**/BackendApplication*.java</sonar.exclusions>
+        <sonar.exclusions>**/BackendApplication*.java,**/jwt/**,UserDTO.java,**/exception/**</sonar.exclusions>
     </properties>
     <dependencies>
         <dependency>
@@ -114,12 +114,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/constant/**</exclude>
-                        <exclude>**/filter/**</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>
