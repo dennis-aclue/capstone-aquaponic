@@ -1,16 +1,21 @@
-import React, {FormEvent, useState} from 'react';
+import React, {FormEvent, useEffect, useState} from 'react';
 import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
 import '../../style/projects/addProject.css'
 
 export default function AddProject() {
 
-    const [newProject, setNewProject] = useState(
-        {
-            shortDescription: "",
-            projectName: ""
-        }
-    );
+    const [userId, setUserId] = useState("")
+    const [shortDescription, setShortDescription] = useState("")
+    const [projectName, setProjectName] = useState("")
+    const [username, setUsername] = useState("")
+
+    useEffect(() => {
+        let userId = (JSON.parse(localStorage.getItem('user') || '{}  ').userId);
+        setUserId(userId);
+        let username = (JSON.parse(localStorage.getItem('user') || '{}  ').username);
+        setUsername(username);
+    }, []);
 
     const projectsUrl = '/api/projects/addProject';
     const [messageStatus, setMessageStatus] = useState('')
@@ -24,25 +29,27 @@ export default function AddProject() {
 
     const postNewProject = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        axios.post(projectsUrl, newProject)
+        axios.post(projectsUrl, {
+            userId: userId,
+            username: username,
+            projectName: projectName,
+            shortDescription: shortDescription
+        })
             .then(function (response) {
                 setButtonText('saving in progress');
                 setIsLoading(true)
                 if (response.status === 200 || response.status === 201) {
-                    setMessageStatus(' New Project ' + newProject.projectName + ', successfully created.');
+                    setMessageStatus(' New Project ' + projectName + ', successfully created.');
                 }
             })
             .then(() => setTimeout(() => setBackToProjectOverview(), 2000))
             .catch((e) => console.log("POST ERROR: " + e))
 
-        setNewProject({projectName: "", shortDescription: ""});
     }
 
     function handleChange(event: any) {
-        setNewProject({
-            ...newProject,
-            [event.target.name]: event.target.value
-        })
+        event.preventDefault()
+        postNewProject(event)
     }
 
     return <div className="flexColumnCenter">
@@ -63,8 +70,8 @@ export default function AddProject() {
                            type="text"
                            id="projectName"
                            name="projectName"
-                           value={newProject.projectName}
-                           onChange={handleChange}
+                           value={projectName}
+                           onChange={(e) => setProjectName(e.target.value)}
                            placeholder="project name"
                     />
                 </>
@@ -77,8 +84,8 @@ export default function AddProject() {
                            type="text"
                            id="shortDescription"
                            name="shortDescription"
-                           value={newProject.shortDescription}
-                           onChange={handleChange}
+                           value={shortDescription}
+                           onChange={(e) => setShortDescription(e.target.value)}
                            placeholder="project description"
                     />
                 </>

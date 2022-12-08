@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 export default function MemberOverview() {
 
     const [getUserName, setUserName] = useState("");
+    const [getUserId, setUserId] = useState("");
     const [getPassword, setPassword] = useState("");
     const [getFirstName, setFirstName] = useState("");
     const [getLastName, setLastName] = useState("");
@@ -11,6 +12,7 @@ export default function MemberOverview() {
 
     useEffect(() => {
             setUserName(JSON.parse(localStorage.getItem('user') || '{}').username);
+            setUserId(JSON.parse(localStorage.getItem('user') || '{}').userId);
             setPassword(JSON.parse(localStorage.getItem('user') || '{}').password);
             setFirstName(JSON.parse(localStorage.getItem('user') || '{}').firstName);
             setLastName(JSON.parse(localStorage.getItem('user') || '{}').lastName);
@@ -24,6 +26,9 @@ export default function MemberOverview() {
             <ul>
                 <h1>Username: {getUserName}</h1>
                 <p>
+                    UserId: {getUserId}
+                </p>
+                <p>
                     Password: {getPassword.substring(1, 5)}********
                 </p>
                 <p>
@@ -35,7 +40,6 @@ export default function MemberOverview() {
                 <p>
                     Email: {getEmail}
                 </p>
-
                 <p>
                     Role: {getRole}
                 </p>

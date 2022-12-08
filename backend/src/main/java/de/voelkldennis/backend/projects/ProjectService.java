@@ -17,7 +17,7 @@ public class ProjectService {
 
     public Project addNewProject(NewProjectDTO newProjectDTO) {
         String projectId = projectUtils.generateUUID();
-        Project saveProject = new Project(projectId, newProjectDTO.projectName(), newProjectDTO.shortDescription(), newProjectDTO.projectVisibility(false));
+        Project saveProject = new Project(projectId, newProjectDTO.userId(), newProjectDTO.username(), newProjectDTO.projectName(), newProjectDTO.shortDescription(), newProjectDTO.projectVisibility(false));
         return projectRepo.save(saveProject);
     }
 
@@ -50,15 +50,24 @@ public class ProjectService {
     public Project updateProjectWithId(String projectId, NewProjectDTO newProjectDTO) {
         Project updatedProject = new Project(
                 projectId,
+                newProjectDTO.userId(),
+                newProjectDTO.username(),
                 newProjectDTO.projectName(),
                 newProjectDTO.shortDescription(),
-                newProjectDTO.projectVisibility());
+                newProjectDTO.projectVisibility()
+        );
         return projectRepo.save(updatedProject);
     }
 
     public List<Project> getAllVisibleProjects() {
         return projectRepo.findAll().stream()
                 .filter(Project::projectVisibility)
+                .toList();
+    }
+
+    public List<Project> getUserProjects(String userId) {
+        return projectRepo.findAll().stream()
+                .filter(project -> project.userId().equals(userId))
                 .toList();
     }
 }
