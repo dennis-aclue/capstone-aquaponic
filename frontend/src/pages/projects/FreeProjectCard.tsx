@@ -8,6 +8,7 @@ const FreeProjectCard = () => {
     const params = useParams()
     const [projectData, setProjectData] = useState({
         shortDescription: "",
+        username: "",
         projectName: "",
         projectId: "",
     })
@@ -16,6 +17,7 @@ const FreeProjectCard = () => {
         const singleProjectUrl = `/api/projects/projectCard/${params.projectId}`
         axios.get(singleProjectUrl)
             .then((response) => {
+                console.log(response.data)
                 setProjectData(response.data)
             })
             .catch((error) => console.log("Get project with projectId ERROR: " + error))
@@ -28,6 +30,8 @@ const FreeProjectCard = () => {
         </nav>
 
         <form className='project__card'>
+            <p className="projectCard__element label">Username</p>
+            <p className="projectCard__element data">{projectData.username}</p>
             <p className="projectCard__element label">Project name</p>
             <p className="projectCard__element data">{projectData.projectName}</p>
             <p className="projectCard__element label">Short description</p>

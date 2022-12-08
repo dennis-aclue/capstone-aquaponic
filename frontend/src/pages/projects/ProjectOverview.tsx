@@ -6,16 +6,17 @@ import '../../style/projects/projectOverview.css'
 export default function ProjectOverview() {
 
     const navigate = useNavigate();
-    const projectsUrl = '/api/projects/projectOverview';
+    const projectsUrl = '/api/projects/userProjectOverview/';
 
     useEffect(() => {
-        getAllProjects()
+        let userId = (JSON.parse(localStorage.getItem('user') || '{}  ').userId);
+        getAllProjects(userId)
     }, [])
 
     const [projects, setProjects] = useState([]);
 
-    const getAllProjects = () => {
-        axios.get(projectsUrl)
+    const getAllProjects = (userId: string) => {
+        axios.get(projectsUrl + userId)
             .then((response) => {
                 setProjects(response.data)
             })

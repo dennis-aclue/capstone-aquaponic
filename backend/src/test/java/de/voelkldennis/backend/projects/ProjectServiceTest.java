@@ -23,10 +23,11 @@ class ProjectServiceTest {
         //given
         String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
         String projectName = "aquaponic_test_name";
+        String username = "aquaponic_test_username";
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
-        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
-        NewProjectDTO newProjectDTO = new NewProjectDTO(projectName, shortDescription, projectVisibility);
+        Project projectWithId = new Project(projectId, "userId", username, projectName, shortDescription, projectVisibility);
+        NewProjectDTO newProjectDTO = new NewProjectDTO("userId", username, projectName, shortDescription, projectVisibility);
         //when
         when(projectUtils.generateUUID()).thenReturn(projectId);
         when(projectRepo.save(projectWithId)).thenReturn(projectWithId);
@@ -54,7 +55,7 @@ class ProjectServiceTest {
         String projectName = "aquaponic_test_name";
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
-        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        Project projectWithId = new Project(projectId, "userId", "username", projectName, shortDescription, projectVisibility);
         //when
         when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.of(projectWithId));
         Optional<Project> actual = projectService.getProjectWithId(projectId);
@@ -71,7 +72,7 @@ class ProjectServiceTest {
         String projectName = "aquaponic_test_name";
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
-        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        Project projectWithId = new Project(projectId, "userId", "username", projectName, shortDescription, projectVisibility);
         //when
         when(projectRepo.findByProjectId(projectId)).thenReturn(Optional.of(projectWithId));
         Project actual = projectService.deleteProjectWithId(projectId);
@@ -106,7 +107,7 @@ class ProjectServiceTest {
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
 
-        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        Project projectWithId = new Project(projectId, "userId", "username", projectName, shortDescription, projectVisibility);
         //when
         when(projectRepo.findAll()).thenReturn(List.of(projectWithId));
         assertTrue(projectService.isIdExisting(projectId));
@@ -122,7 +123,7 @@ class ProjectServiceTest {
         String shortDescription = "aquaponic_test_description";
         Boolean projectVisibility = false;
 
-        Project projectWithId = new Project(projectId, projectName, shortDescription, projectVisibility);
+        Project projectWithId = new Project(projectId, "userId", "username", projectName, shortDescription, projectVisibility);
         //when
         when(projectRepo.findAll()).thenReturn(List.of(projectWithId));
         assertFalse(projectService.isIdExisting(fakeProjectId));
@@ -147,15 +148,21 @@ class ProjectServiceTest {
         //given
         String projectId = "add4ee6b-a702-4553-a0b0-2c07724b5b8b";
         Project projectWithId = new Project(projectId,
+                "user_id",
+                "username",
                 "aquaponic_test_name",
                 "aquaponic_test_description",
                 false);
-        NewProjectDTO newProjectDTO = new NewProjectDTO("updatedName",
-                "updatedDescription",
+        NewProjectDTO newProjectDTO = new NewProjectDTO("user_id",
+                "username",
+                "updated_name",
+                "updated_description",
                 true);
         Project updatedProject = new Project(projectId,
-                "updatedName",
-                "updatedDescription",
+                "user_id",
+                "username",
+                "updated_name",
+                "updated_description",
                 true);
         //when
         when(projectRepo.save(updatedProject)).thenReturn(updatedProject);
