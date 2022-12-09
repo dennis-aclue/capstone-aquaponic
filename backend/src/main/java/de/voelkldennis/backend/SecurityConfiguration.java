@@ -63,11 +63,10 @@ public class SecurityConfiguration {
 
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         http.cors();
-        //http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS)
                 .and().authorizeRequests()
                 .antMatchers(PUBLIC_URLS).permitAll()
-                .antMatchers("/projects/**").hasRole("USER")
+                .antMatchers("/projects/**", "/update/**").hasRole("USER")
                 .and()
                 .httpBasic()
                 .and()

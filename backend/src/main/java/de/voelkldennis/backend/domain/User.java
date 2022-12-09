@@ -32,8 +32,6 @@ public class User implements Serializable {
     private String[] authorities;   //Authorities for the user [USER_READ, USER_WRITE, ...] from Authority class
     private boolean isActive;
     private boolean isNotLocked;    //Is the user locked or not
-    private String[] projects;
-
 
     public String getId() {
         return id;
