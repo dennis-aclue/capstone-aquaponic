@@ -11,8 +11,7 @@ public record UserDTO(
         String username,
         @NotBlank
         String email,
-        String password,
-        String[] projects
+        String password
 
 ) {
         @Override

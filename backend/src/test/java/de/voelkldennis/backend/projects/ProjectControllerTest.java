@@ -34,7 +34,7 @@ class ProjectControllerTest {
     @BeforeEach
     void setUp() {
         String password = passwordEncoder.encode("test_password");
-        String[] userRole = {"ROLE_USER"};
+        String[] userAuthority = {"user:read"};
         User user = new User();
         user.setUserId("1");
         user.setUsername("user");
@@ -43,7 +43,7 @@ class ProjectControllerTest {
         user.setLastName("Chris");
         user.setEmail("test@tes.de");
         user.setRole("ROLE_USER");
-        user.setAuthorities(userRole);
+        user.setAuthorities(userAuthority);
         user.setNotLocked(true);
         user.setActive(true);
         userRepository.save(user);
@@ -118,7 +118,7 @@ class ProjectControllerTest {
                                 """).with(csrf()))
                 .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
 
-        String getProjectId = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+        String getUserId = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("JwtToken", response)
                         .content("""
@@ -130,8 +130,8 @@ class ProjectControllerTest {
                                 }
                                 """).with(csrf()))
                 .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();
-        
-        String userId = getProjectId.split(":")[2].split(",")[0].trim();
+
+        String userId = getUserId.split(":")[2].split(",")[0].trim();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/userProjectOverview/" + userId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -194,6 +194,7 @@ class ProjectControllerTest {
     @Test
     @WithMockUser
     void deleteProjectWithIdAndReturnNoContent() throws Exception {
+
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -231,6 +232,7 @@ class ProjectControllerTest {
     @Test
     @WithMockUser
     void deleteProjectWithNotExistingIdAndReturnNoContent() throws Exception {
+
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -267,6 +269,7 @@ class ProjectControllerTest {
     @Test
     @WithMockUser
     void updateProjectWithExistingIdAndReturnUpdatedProject() throws Exception {
+
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -333,6 +336,4 @@ class ProjectControllerTest {
                 .andExpect(content().json("[]"));
     }
 
-
 }
-

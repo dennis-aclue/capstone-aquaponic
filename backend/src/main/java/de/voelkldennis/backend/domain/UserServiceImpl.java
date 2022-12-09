@@ -1,7 +1,6 @@
 package de.voelkldennis.backend.domain;
 
 import de.voelkldennis.backend.ProjectUtils;
-import de.voelkldennis.backend.domain.enumeration.Role;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.UserNotFoundException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
@@ -16,20 +15,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
-import static de.voelkldennis.backend.domain.enumeration.Role.ROLE_USER;
-import static de.voelkldennis.backend.jwt.constant.FileConstant.*;
+import static de.voelkldennis.backend.domain.enumeration.Role.ROLE_SUPER_ADMIN;
+import static de.voelkldennis.backend.jwt.constant.FileConstant.DEFAULT_USER_IMAGE_PATH;
 import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
@@ -41,29 +34,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final ProjectUtils projectUtils;
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
-        if (profileImage != null) {
-            Path userFolder = Paths.get(USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
-            if (Files.exists(userFolder)) {
-                Files.createDirectories(userFolder);
-                logger.info(DIRECTORY_CREATED);
-            }
-            Files.deleteIfExists(Paths.get(userFolder + user.getUsername() + DOT + JPG_EXTENSION));
-            Files.copy(profileImage.getInputStream(), userFolder.resolve(user.getUsername() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
-            user.setProfileImageUrl(setProfileImageUrl(user.getUsername()));
-            userRepository.save(user);
-        }
-    }
-
-    private String setProfileImageUrl(String username) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH
-                + username + DOT + JPG_EXTENSION).toUriString();
-    }
-
-    private Role getRoleEnumName(String role) {
-        return Role.valueOf(role.toUpperCase());
-    }
-
     private String getTemporaryProfileImageUrl(String username) {
         return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + username).toUriString();
     }
@@ -73,7 +43,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private String generatePassword() {
-        return projectUtils.generateUUID();
+        String randomUUID = projectUtils.generateUUID();
+        return randomUUID.substring(0, 8);
     }
 
     private String generateUserId() {
@@ -120,44 +91,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User addNewUser(UserDTO userDTO) throws
-            UserNotFoundException,
-            EmailExistException,
-            UsernameExistException {
-        validateNewUsernameAndEmail(EMPTY, userDTO.username(), userDTO.password());
-        User newUser = new User();
-        newUser.setUserId(generateUserId());
-        String password = generatePassword();
-        String encodedPassword = encodePassword(password);
-        newUser.setPassword(encodedPassword);
-        newUser.setFirstName(userDTO.firstName());
-        newUser.setLastName(userDTO.lastName());
-        newUser.setUsername(userDTO.username());
-        newUser.setEmail(userDTO.email());
-        newUser.setJoinDate(new Date());
-        newUser.setActive(true);
-        newUser.setNotLocked(false);
-        newUser.setRole(ROLE_USER.name());
-        newUser.setAuthorities(ROLE_USER.getAuthorities());
-        newUser.setProfileImageUrl(getTemporaryProfileImageUrl(newUser.getUsername()));
-        userRepository.save(newUser);
-        return newUser;
+    public User updateUser(String userId, UserDTO userDTO) {
+        User updateUser = new User();
+        updateUser.setFirstName(userDTO.firstName());
+        updateUser.setLastName(userDTO.lastName());
+        updateUser.setUsername(userDTO.username());
+        updateUser.setEmail(userDTO.email());
+        return userRepository.save(updateUser);
     }
 
     @Override
-    public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException {
-        User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
-        currentUser.setFirstName(newFirstName);
-        currentUser.setLastName(newLastName);
-        currentUser.setUsername(newUsername);
-        currentUser.setEmail(newEmail);
-        currentUser.setActive(isActive);
-        currentUser.setNotLocked(isNonLocked);
-        currentUser.setRole(getRoleEnumName(role).name());
-        currentUser.setAuthorities(getRoleEnumName(role).getAuthorities());
-        userRepository.save(currentUser);
-        saveProfileImage(currentUser, profileImage);
-        return currentUser;
+    public boolean isIdExisting(String userId) {
+        List<User> user = userRepository.findAll();
+        for (User u : user) {
+            if (u.getId().equals(userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -165,18 +116,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.deleteById(id);
     }
 
+    //@Override
+    public void resetPassword(String email) {
+        User user = findUserByEmail(email);
+        String password = generatePassword();
+        String encodedPassword = encodePassword(password);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            logger.error(String.format(NO_USER_FOUND_BY_USERNAME, username));
+            //logger.error(String.format(NO_USER_FOUND_BY_USERNAME, username));
             throw new UsernameNotFoundException(String.format(NO_USER_FOUND_BY_USERNAME, username));
         } else {
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepository.save(user);
-            UserPrincipal userPrincipal = new UserPrincipal(user);
-            logger.info(String.format(LOGIN_SUCCESSFUL, username));
-            return userPrincipal;
+            //logger.info(String.format(LOGIN_SUCCESSFUL, username));
+            return new UserPrincipal(user);
         }
     }
 
@@ -198,14 +157,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(encodePassword(password));
         user.setActive(true);
         user.setNotLocked(true);
-        user.setRole(ROLE_USER.name());
-        user.setAuthorities(ROLE_USER.getAuthorities());
+        user.setRole(ROLE_SUPER_ADMIN.name());
+        user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(userDTO.username()));
         logger.info(String.format(NEW_USER_PASSWORD, password));
+
         return userRepository.save(user);
     }
 
-    @Override
+    //@Override
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -219,6 +179,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
-
 
 }
