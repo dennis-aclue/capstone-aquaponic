@@ -1,15 +1,20 @@
 package de.voelkldennis.backend.projects;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.voelkldennis.backend.domain.User;
+import de.voelkldennis.backend.domain.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,39 +22,39 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ProjectControllerTest {
 
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private MockMvc mockMvc;
 
+    @BeforeEach
+    void setUp() {
+        String password = passwordEncoder.encode("test_password");
+        String[] userRole = {"ROLE_USER"};
+        User user = new User();
+        user.setUserId("1");
+        user.setUsername("user");
+        user.setPassword(password);
+        user.setFirstName("Christian");
+        user.setLastName("Chris");
+        user.setEmail("test@tes.de");
+        user.setRole("ROLE_USER");
+        user.setAuthorities(userRole);
+        user.setNotLocked(true);
+        user.setActive(true);
+        userRepository.save(user);
+    }
+
     @DirtiesContext
     @Test
-    //@WithMockUser(username = "test_username")
-    //@WithMockUser(username = "user", roles = "ROLE_USER", password = "test_password")
     @WithMockUser
     void addNewProjectReturnIsOk() throws Exception {
 
-        //User user = new User();
-        //user.setUsername("user");
-        //user.setPassword("test_password");
-
-/*
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                    "firstName":"Christian",
-                                    "lastName":"Chris",
-                                    "username":"user",
-                                    "email":"chris@googlemail.com"
-                                }
-                                """).with(csrf()))
-                .andExpect(status().isOk());
-
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -57,66 +62,277 @@ class ProjectControllerTest {
                                     "password": "test_password"
                                 }
                                 """).with(csrf()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project",
+                                    "shortDescription": "Test Project Short Description"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(201));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/projects")
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser
+    void getAllProjectsAndReturnOk() throws Exception {
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                    "projectName": "aquaponic_test_name",
-                                    "shortDescription": "aquaponic_test_description"
+                                    "username": "user",
+                                    "password": "test_password"
                                 }
-                                """))
-                .andExpect(status().is(201));*/
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectOverview")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
 
     }
 
     @DirtiesContext
     @Test
-    void getAllProjectsAndReturnOk() throws Exception {
+    @WithMockUser
+    void getUserProjects() throws Exception {
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        String getProjectId = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project",
+                                    "shortDescription": "Test Project Short Description"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();
+        
+        String userId = getProjectId.split(":")[2].split(",")[0].trim();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/userProjectOverview/" + userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
 
     }
 
     @DirtiesContext
     @Test
+    @WithMockUser
     void getProjectWithIdAndReturnOk() throws Exception {
 
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        String getProjectId = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project",
+                                    "shortDescription": "Test Project Short Description"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();
+
+        String projectId = (getProjectId.split(":")[1].split(",")[0].trim().replace("\"", ""));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectCard/" + projectId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                               "projectId": "<ID>",
+                               "userId": "1",
+                               "username": "user",
+                               "projectName": "Test Project",
+                               "shortDescription": "Test Project Short Description",
+                               "projectVisibility": false
+                        }
+                        """.replace("<ID>", projectId)));
+
     }
 
-    @Test
     @DirtiesContext
+    @Test
+    @WithMockUser
     void deleteProjectWithIdAndReturnNoContent() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
 
+        String getProjectId = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project",
+                                    "shortDescription": "Test Project Short Description"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();
+
+        String projectId = (getProjectId.split(":")[1].split(",")[0].trim().replace("\"", ""));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/" + projectId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().is(200));
 
     }
 
-    @Test
     @DirtiesContext
+    @Test
+    @WithMockUser
     void deleteProjectWithNotExistingIdAndReturnNoContent() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project",
+                                    "shortDescription": "Test Project Short Description"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/projects/" + "123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().is(500));
 
     }
 
-    @Test
     @DirtiesContext
+    @Test
+    @WithMockUser
     void updateProjectWithExistingIdAndReturnUpdatedProject() throws Exception {
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
 
+        String getProjectId = mockMvc.perform(MockMvcRequestBuilders.post("/api/projects/addProject")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project",
+                                    "shortDescription": "Test Project Short Description"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();
+
+        String projectId = (getProjectId.split(":")[1].split(",")[0].trim().replace("\"", ""));
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/projects/update/" + projectId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "userId": "1",
+                                    "username": "user",
+                                    "projectName": "Test Project Updated",
+                                    "shortDescription": "Test Project Short Description Updated",
+                                    "projectVisibility": true
+                                }
+                                """).with(csrf()))
+                .andExpect(status().is(200))
+                .andReturn().getResponse().getContentAsString();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/projectCard/" + projectId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                            "userId": "1",
+                            "username": "user",
+                            "projectName": "Test Project Updated",
+                            "shortDescription": "Test Project Short Description Updated",
+                            "projectVisibility": true
+                        }
+                        """));
 
     }
 
     @Test
     @DirtiesContext
-    void updateProjectWithNotExistingIdAndReturn404() throws Exception {
-
-    }
-
-
-    @Test
     void getAllVisibleProjects() throws Exception {
         //given&when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/projects/freeGallery"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
+
+
 }
 
