@@ -14,18 +14,6 @@ class UserDTOTest {
     }
 
     @Test
-    void testHashCode() {
-        // Arrange, Act and Assert
-        assertEquals(0, (new UserDTO("FirstName", "LastName", "Username", "Email", "Password")).hashCode());
-    }
-
-    @Test
-    void testToString() {
-        // Arrange, Act and Assert
-        assertEquals("null", (new UserDTO("FirstName", "LastName", "Username", "Email", "Password")).toString());
-    }
-
-    @Test
     void firstName() {
         // Arrange, Act and Assert
         assertEquals("FirstName", (new UserDTO("FirstName", "LastName", "Username", "Email", "Password")).firstName());
@@ -54,4 +42,5 @@ class UserDTOTest {
         // Arrange, Act and Assert
         assertEquals("Password", (new UserDTO("FirstName", "LastName", "Username", "Email", "Password")).password());
     }
+
 }
