@@ -16,7 +16,8 @@ public interface UserService {
 
     void deleteUser(String username) throws IOException;
 
-    User updateUser(String userId, UserDTO userDTO) throws UserNotFoundException, EmailExistException, UsernameExistException;
+    User updateUser(String userId, UserDTO updateUser) throws UserNotFoundException, EmailExistException, UsernameExistException;
 
-    boolean isIdExisting(String userId);
+    void resetPassword(String email);
+
 }

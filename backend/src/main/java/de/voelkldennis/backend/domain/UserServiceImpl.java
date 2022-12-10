@@ -91,16 +91,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(String userId, UserDTO userDTO) {
-        User updateUser = new User();
-        updateUser.setFirstName(userDTO.firstName());
-        updateUser.setLastName(userDTO.lastName());
-        updateUser.setUsername(userDTO.username());
-        updateUser.setEmail(userDTO.email());
-        return userRepository.save(updateUser);
+    public User updateUser(String userId, UserDTO updateUser) {
+        User toUpdateUser = findUserByUsername(updateUser.username());
+        toUpdateUser.setFirstName(updateUser.firstName());
+        toUpdateUser.setLastName(updateUser.lastName());
+        toUpdateUser.setUsername(updateUser.username());
+        toUpdateUser.setEmail(updateUser.email());
+
+        return userRepository.save(toUpdateUser);
     }
 
-    @Override
+/*    @Override
     public boolean isIdExisting(String userId) {
         List<User> user = userRepository.findAll();
         for (User u : user) {
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
         }
         return false;
-    }
+    }*/
 
     @Override
     public void deleteUser(String id) {
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String password = generatePassword();
         String encodedPassword = encodePassword(password);
         user.setPassword(encodedPassword);
+        logger.info(String.format(PASSWORD_RESET, password));
         userRepository.save(user);
     }
 

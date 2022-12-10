@@ -27,12 +27,14 @@ public class UserController extends ExceptionHandling {
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final UserRepository userRepository;
     private final JWTTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(AuthenticationManager authenticationManager, UserService userService, JWTTokenProvider jwtTokenProvider) {
+    public UserController(AuthenticationManager authenticationManager, UserService userService, UserRepository userRepository, JWTTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
@@ -69,12 +71,13 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(newUserDTO, OK);
     }
 
-    @PutMapping("/update/{userId}")
-    public User update(@PathVariable String userId, @RequestBody @Valid UserDTO userDTO)
-            throws UserNotFoundException, EmailExistException, UsernameExistException {
-        if (userService.isIdExisting(userId)) {
-            return userService.updateUser(userId, userDTO);
-        } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User " + userId + " not found");
+    @PutMapping("/updateUser/{id}")
+    public User updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) throws UserNotFoundException, EmailExistException, UsernameExistException {
+        if (userRepository.existsById(id)) {
+            return userService.updateUser(id, userDTO);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
     }
 
     @DeleteMapping("/delete/{id}")
@@ -82,6 +85,17 @@ public class UserController extends ExceptionHandling {
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") String id) throws IOException {
         userService.deleteUser(id);
         return response();
+    }
+
+    @PostMapping("/resetPassword/{email}")
+    public void resetPassword(@PathVariable String email) {
+        userService.resetPassword(email);
+    }
+
+    @GetMapping("/getUserData/{id}")
+    public ResponseEntity<User> getUserData(@PathVariable String id) {
+        String username = userRepository.findById(id).get().getUsername();
+        return new ResponseEntity<>(userService.findUserByUsername(username), OK);
     }
 
 }

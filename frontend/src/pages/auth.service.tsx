@@ -7,6 +7,7 @@ const login = (username: string, password: string) => {
     })
         .then((response) => {
                 localStorage.setItem('user', JSON.stringify(response.data));
+            sessionStorage.setItem('user', JSON.stringify(response.data));
                 if (response.headers.jwttoken) {
                     localStorage.setItem('jwt-token', JSON.stringify(response.headers.jwttoken));
                     sessionStorage.setItem('jwt-token', JSON.stringify(response.headers.jwttoken));
@@ -23,7 +24,6 @@ const getUserFromLocalCache = () => {
 const logout = () => {
     sessionStorage.removeItem("jwt-token");
     localStorage.clear();
-    console.log("logout: " + getCurrentToken());
 };
 
 const getCurrentToken = () => {
@@ -31,12 +31,18 @@ const getCurrentToken = () => {
     return JSON.parse(sessionStorage.getItem('jwt-token') || "null");
 };
 
+const resetPassword = (email: String) => {
+    const resetPasswordUrl = `/user/resetPassword/`
+    axios.post(resetPasswordUrl + email)
+        .catch((error) => console.log("Reset password ERROR: " + error))
+}
 
 const authService = {
     login,
     logout,
     getCurrentToken,
     getUserFromLocalCache,
+    resetPassword,
 };
 
 export default authService;
