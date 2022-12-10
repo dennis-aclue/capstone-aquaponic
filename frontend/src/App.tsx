@@ -18,13 +18,8 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        let username = (JSON.parse(localStorage.getItem('user') || '{}').username);
-        //console.log(JSON.parse(localStorage.getItem('user') || '{}').username);
-        console.log(username);
         const token = AuthService.getCurrentToken();
-        console.log("token: " + token);
         if (token) {
-            //setCurrentUserToken(undefined);
             setCurrentUserToken(token);
         }
     }, []);
@@ -41,7 +36,6 @@ function App() {
     };
 
     const logIn = () => {
-        //setCurrentUserToken(undefined);
         navigate("/login");
     };
 

@@ -6,6 +6,8 @@ const Login = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [startEditing, setStartEditing] = useState(true);
 
     const navigate = useNavigate();
 
@@ -25,6 +27,12 @@ const Login = () => {
             console.log("Login Error", err);
         }
     };
+
+    const handleChangePassword = () => {
+        AuthService.resetPassword(email);
+        setStartEditing(true)
+        navigate("/login")
+    }
 
     return (
         <div className="flexColumnCenter">
@@ -67,9 +75,37 @@ const Login = () => {
                 </p>
             </form>
 
+            <Link onClick={() => setStartEditing(false)} to={"#"}>Forgot password ?</Link>
+
             <Link to="/registration">
                 Registration page
             </Link>
+
+            {!startEditing && (
+                <p className="popup">
+                    <p className="popup-inner">
+                        <h1>Do you really want to reset your password?</h1>
+                        <form className="addProjectForm" onSubmit={handleChangePassword}>
+                            <label className="formFieldLabel" htmlFor={"email"}>
+                                Your email address:
+                            </label>
+                            <input
+                                type="text"
+                                id="email"
+                                className="formFieldInputEmail"
+                                placeholder="Enter your email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </form>
+                        <button className="popup-inner__element button" onClick={() => setStartEditing(true)}>cancel
+                        </button>
+                        <button className="popup-inner__element button" onClick={handleChangePassword}>Reset password
+                        </button>
+                    </p>
+                </p>
+            )}
 
         </div>)
 }
