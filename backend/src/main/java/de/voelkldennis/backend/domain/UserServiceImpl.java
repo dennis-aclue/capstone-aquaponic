@@ -20,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.Date;
 import java.util.List;
 
-import static de.voelkldennis.backend.domain.enumeration.Role.ROLE_SUPER_ADMIN;
+import static de.voelkldennis.backend.domain.Role.ROLE_SUPER_ADMIN;
 import static de.voelkldennis.backend.jwt.constant.FileConstant.DEFAULT_USER_IMAGE_PATH;
 import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -101,17 +101,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(toUpdateUser);
     }
 
-/*    @Override
-    public boolean isIdExisting(String userId) {
-        List<User> user = userRepository.findAll();
-        for (User u : user) {
-            if (u.getId().equals(userId)) {
-                return true;
-            }
-        }
-        return false;
-    }*/
-
     @Override
     public void deleteUser(String id) {
         userRepository.deleteById(id);
@@ -130,13 +119,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            //logger.error(String.format(NO_USER_FOUND_BY_USERNAME, username));
             throw new UsernameNotFoundException(String.format(NO_USER_FOUND_BY_USERNAME, username));
         } else {
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             userRepository.save(user);
-            //logger.info(String.format(LOGIN_SUCCESSFUL, username));
             return new UserPrincipal(user);
         }
     }

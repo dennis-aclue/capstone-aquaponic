@@ -1,4 +1,4 @@
-package de.voelkldennis.backend.domain.enumeration;
+package de.voelkldennis.backend.domain;
 
 import static de.voelkldennis.backend.jwt.constant.Authority.*;
 

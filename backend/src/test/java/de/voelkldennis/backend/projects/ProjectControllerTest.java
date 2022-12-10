@@ -165,7 +165,8 @@ class ProjectControllerTest {
                                     "userId": "1",
                                     "username": "user",
                                     "projectName": "Test Project",
-                                    "shortDescription": "Test Project Short Description"
+                                    "shortDescription": "Test Project Short Description",
+                                    "projectVisibility": false
                                 }
                                 """).with(csrf()))
                 .andExpect(status().is(201)).andReturn().getResponse().getContentAsString();

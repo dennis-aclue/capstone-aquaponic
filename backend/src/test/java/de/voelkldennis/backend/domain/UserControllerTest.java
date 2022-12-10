@@ -172,24 +172,6 @@ class UserControllerTest {
 
     }
 
-
-    // ToDo: Test for Update User
-    @DirtiesContext
-    @Test
-    @WithMockUser
-    void updateUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                    "username": "user",
-                                    "password": "test_password"
-                                }
-                                """).with(csrf()))
-                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
-
-    }
-
     @DirtiesContext
     @Test
     @WithMockUser(username = "user", roles = {"SUPER_ADMIN"})
@@ -213,4 +195,72 @@ class UserControllerTest {
 
     }
 
+    @DirtiesContext
+    @Test
+    @WithMockUser
+    void resetPassword() throws Exception {
+
+        String email = "test@test.de";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/resetPassword/" + email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"email": "test@test.de"}  """).with(csrf()))
+                .andExpect(status().isOk());
+
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser
+    void getUserData() throws Exception {
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/getUserData/" + "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().isOk());
+
+    }
+
+
+    @DirtiesContext
+    @Test
+    @WithMockUser
+    void updateUser() throws Exception {
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/user/updateUser/" + "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                    "firstName": "dto_firstName",
+                                    "lastName": "dto_lastName",
+                                    "username": "user",
+                                    "email": "test@test.de"
+                                  }
+                                """).with(csrf()))
+                .andExpect(status().isOk());
+
+    }
 }

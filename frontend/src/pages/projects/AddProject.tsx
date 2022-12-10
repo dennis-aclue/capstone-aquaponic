@@ -11,13 +11,14 @@ export default function AddProject() {
     const [username, setUsername] = useState("")
 
     useEffect(() => {
-        let userId = (JSON.parse(localStorage.getItem('user') || '{}  ').userId);
+        let userId = (JSON.parse(sessionStorage.getItem('user') || '{}  ').userId);
         setUserId(userId);
-        let username = (JSON.parse(localStorage.getItem('user') || '{}  ').username);
+        console.log("userId: " + userId)
+        let username = (JSON.parse(sessionStorage.getItem('user') || '{}  ').username);
         setUsername(username);
+        console.log("username: " + username)
     }, []);
 
-    const projectsUrl = '/api/projects/addProject';
     const [messageStatus, setMessageStatus] = useState('')
     const navigate = useNavigate();
     const [buttonText, setButtonText] = useState('save new project');
@@ -29,11 +30,12 @@ export default function AddProject() {
 
     const postNewProject = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        axios.post(projectsUrl, {
+        axios.post('/api/projects/addProject', {
             userId: userId,
             username: username,
             projectName: projectName,
-            shortDescription: shortDescription
+            shortDescription: shortDescription,
+            projectVisibility: false,
         })
             .then(function (response) {
                 setButtonText('saving in progress');
