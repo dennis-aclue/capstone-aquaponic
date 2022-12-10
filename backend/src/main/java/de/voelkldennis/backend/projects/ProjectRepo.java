@@ -8,7 +8,5 @@ import java.util.Optional;
 @Repository("ProjectRepo")
 public interface ProjectRepo extends MongoRepository<Project, String> {
     Optional<Project> findByProjectId(String projectId);
-
     void deleteByProjectId(String projectId);
-
 }

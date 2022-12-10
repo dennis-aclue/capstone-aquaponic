@@ -6,17 +6,16 @@ import '../../style/projects/projectOverview.css'
 export default function ProjectOverview() {
 
     const navigate = useNavigate();
-    const projectsUrl = '/api/projects/userProjectOverview/';
 
     useEffect(() => {
-        let userId = (JSON.parse(localStorage.getItem('user') || '{}  ').userId);
+        let userId = (JSON.parse(sessionStorage.getItem('user') || '{}  ').userId);
         getAllProjects(userId)
     }, [])
 
     const [projects, setProjects] = useState([]);
 
     const getAllProjects = (userId: string) => {
-        axios.get(projectsUrl + userId)
+        axios.get('/api/projects/userProjectOverview/' + userId)
             .then((response) => {
                 setProjects(response.data)
             })
@@ -31,8 +30,9 @@ export default function ProjectOverview() {
             <ul className="projectCard">{projects.map((projects: any) => <Link
                 to={"/projectCard/" + projects.projectId}>
                 <li className="projectCard__element projectCard__Element--Highlight" key={projects.projectId}>
-                    <p className="projectCard__element data">{projects.projectName}</p>
-                    <p className="projectCard__element data">{projects.shortDescription.substring(0, 20)}...</p></li>
+                    <p key="projectName" className="projectCard__element data">{projects.projectName}</p>
+                    <p key="shortDescription"
+                       className="projectCard__element data">{projects.shortDescription.substring(0, 20)}...</p></li>
             </Link>)}</ul>
         </section>
 

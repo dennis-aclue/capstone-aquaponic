@@ -71,19 +71,19 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(newUserDTO, OK);
     }
 
-    @PutMapping("/updateUser/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) throws UserNotFoundException, EmailExistException, UsernameExistException {
-        if (userRepository.existsById(id)) {
-            return userService.updateUser(id, userDTO);
+    @PutMapping("/updateUser/{dbUserId}")
+    public User updateUser(@PathVariable String dbUserId, @RequestBody UserDTO userDTO) throws UserNotFoundException, EmailExistException, UsernameExistException {
+        if (userRepository.findById(dbUserId).isPresent()) {
+            return userService.updateUser(dbUserId, userDTO);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{dbUserId}")
     //@PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") String id) throws IOException {
-        userService.deleteUser(id);
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable String dbUserId) throws IOException {
+        userService.deleteUser(dbUserId);
         return response();
     }
 
