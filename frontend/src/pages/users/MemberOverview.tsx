@@ -37,6 +37,7 @@ export default function MemberOverview() {
 
         axios.get('/api/projects/userProjectOverview/' + userId)
             .then((response) => {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 countProjects = (response.data.length)
                 setCountProjects(countProjects);
             })
