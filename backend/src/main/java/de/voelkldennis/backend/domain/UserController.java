@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Optional;
 
 import static de.voelkldennis.backend.jwt.constant.SecurityConstant.JWT_TOKEN_HEADER;
 import static org.springframework.http.HttpStatus.OK;
@@ -94,8 +95,12 @@ public class UserController extends ExceptionHandling {
 
     @GetMapping("/getUserData/{id}")
     public ResponseEntity<User> getUserData(@PathVariable String id) {
-        String username = userRepository.findById(id).get().getUsername();
-        return new ResponseEntity<>(userService.findUserByUsername(username), OK);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            String username = user.get().getUsername();
+            return new ResponseEntity<>(userService.findUserByUsername(String.valueOf(username)), OK);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with " + id + " not found");
     }
 
 }

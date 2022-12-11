@@ -205,7 +205,10 @@ class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/user/resetPassword/" + email)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"email": "test@test.de"}  """).with(csrf()))
+                                {
+                                "email": "test@test.de"
+                                }
+                                """).with(csrf()))
                 .andExpect(status().isOk());
 
     }
@@ -237,7 +240,7 @@ class UserControllerTest {
     @DirtiesContext
     @Test
     @WithMockUser
-    void updateUser() throws Exception {
+    void updateUserWithCorrectId() throws Exception {
 
         String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -263,4 +266,35 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
     }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser
+    void updateUserWithNotPresentId() throws Exception {
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/user/updateUser/" + "100")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .content("""
+                                {
+                                "firstName": "dto_firstName",
+                                "lastName": "dto_lastName",
+                                "username": "userDTO",
+                                "email": "dto@test.de"
+                                  }
+                                """).with(csrf()))
+                .andExpect(status().is(500));
+
+    }
+
 }
