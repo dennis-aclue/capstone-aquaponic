@@ -293,7 +293,7 @@ class UserControllerTest {
                                 "email": "dto@test.de"
                                   }
                                 """).with(csrf()))
-                .andExpect(status().is(500));
+                .andExpect(status().is(400));
 
     }
 

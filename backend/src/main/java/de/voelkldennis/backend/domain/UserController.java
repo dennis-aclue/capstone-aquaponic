@@ -75,10 +75,9 @@ public class UserController extends ExceptionHandling {
     @PutMapping("/updateUser/{dbUserId}")
     public User updateUser(@PathVariable String dbUserId, @RequestBody UserDTO userDTO) throws UserNotFoundException, EmailExistException, UsernameExistException {
         if (userRepository.findById(dbUserId).isPresent()) {
-            return userService.updateUser(dbUserId, userDTO);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            return userService.updateUser(userDTO);
         }
+        throw new UserNotFoundException("User not found");
     }
 
     @DeleteMapping("/delete/{dbUserId}")
