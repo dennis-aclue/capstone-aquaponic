@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateUser(String userId, UserDTO updateUser) {
+    public User updateUser(UserDTO updateUser) {
         User toUpdateUser = findUserByUsername(updateUser.username());
         toUpdateUser.setFirstName(updateUser.firstName());
         toUpdateUser.setLastName(updateUser.lastName());

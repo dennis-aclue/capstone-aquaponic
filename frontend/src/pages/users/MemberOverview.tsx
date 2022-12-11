@@ -5,8 +5,8 @@ import authService from "../auth.service";
 
 export default function MemberOverview() {
 
-    const [dbId, setDbId] = useState<String>("");
-    const [, setUserId] = useState<String>("");
+    const [dbId, setDbId] = useState("");
+    const [, setUserId] = useState("");
     const [startEditing, setStartEditing] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
@@ -39,6 +39,7 @@ export default function MemberOverview() {
             .then((response) => {
                 // eslint-disable-next-line react-hooks/exhaustive-deps
                 countProjects = (response.data.length)
+                // eslint-disable-next-line react-hooks/exhaustive-deps
                 setCountProjects(countProjects);
             })
             .catch((error) => console.log("Get all projects ERROR: " + error))
