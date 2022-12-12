@@ -20,19 +20,8 @@ Frontend:
 .github/workflows/build-sonar-frontend.yml
 
 Here you can see my first draw of the project principles:
-![Aquaponic capstone project](https://github.com/dennis-aclue/capstone-aquaponic/main/Aquaponic-capstone-drawing.png?raw=true)
 ![](Aquaponic-capstone-drawing.png)
-Here you can find the Excalidraw raw file:
-![Aquaponic capstone project Excalidraw file](https://github.com/dennis-aclue/capstone-aquaponic/main/Aquaponic-capstone-file.excalidraw)
-
-
 
 If you close the IDE during running backend and did not close properly, try this on mac:
 ~ % lsof -n -i4TCP:8080
-~ % kill -9 PID     
-
-Frontend:
-Bootstrap install inside frontend folder:
-npm i bootstrap@5.2.3
-npm install react-bootstrap bootstrap
-
+~ % kill -9 PID

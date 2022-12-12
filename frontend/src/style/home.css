@@ -17,3 +17,18 @@
 .mainText {
     text-align: center;
 }
+
+label {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+input {
+    margin: 10px;
+    background-color: #f2f2f2;
+    width: 250px;
+    height: 25px;
+}
