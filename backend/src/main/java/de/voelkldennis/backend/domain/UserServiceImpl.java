@@ -2,9 +2,7 @@ package de.voelkldennis.backend.domain;
 
 import de.voelkldennis.backend.ProjectUtils;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
-import de.voelkldennis.backend.exception.domain.UserNotFoundException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Date;
-import java.util.List;
 
 import static de.voelkldennis.backend.domain.Role.ROLE_SUPER_ADMIN;
 import static de.voelkldennis.backend.jwt.constant.FileConstant.DEFAULT_USER_IMAGE_PATH;
 import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 @Service
 @Transactional
@@ -51,32 +47,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return projectUtils.generateUUID();
     }
 
-    private User validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail)
-            throws UserNotFoundException, UsernameExistException,
+    private void validateNewUsernameAndEmail(String newUsername, String newEmail)
+            throws UsernameExistException,
             EmailExistException {
-        User currentUser = new User();
         User userByNewUsername = findUserByUsername(newUsername);
         User userByNewEmail = findUserByEmail(newEmail);
-        if (StringUtils.isNotBlank(currentUsername)) {
-            currentUser = findUserByUsername(currentUsername);
-            if (currentUser == null) {
-                throw new UserNotFoundException(NO_USER_FOUND_BY_USERNAME + currentUsername);
-            }
-            if (userByNewUsername != null && !currentUser.getId().equals(userByNewUsername.getId())) {
-                throw new UsernameExistException(USERNAME_ALREADY_EXISTS);
-            }
-            if (userByNewEmail != null && !currentUser.getId().equals(userByNewEmail.getId())) {
-                throw new EmailExistException(EMAIL_ALREADY_EXISTS);
-            }
-            return currentUser;
-        } else {
-            if (userByNewUsername != null) {
-                throw new UsernameExistException(USERNAME_ALREADY_EXISTS);
-            }
-            if (userByNewEmail != null) {
-                throw new EmailExistException(EMAIL_ALREADY_EXISTS);
-            }
-            return currentUser;
+        if (userByNewUsername != null) {
+            throw new UsernameExistException(USERNAME_ALREADY_EXISTS);
+        }
+        if (userByNewEmail != null) {
+            throw new EmailExistException(EMAIL_ALREADY_EXISTS);
         }
     }
 
@@ -131,10 +111,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User register(UserDTO userDTO)
             throws
-            UserNotFoundException,
             UsernameExistException,
             EmailExistException {
-        validateNewUsernameAndEmail(EMPTY, userDTO.username(), userDTO.email());
+        validateNewUsernameAndEmail(userDTO.username(), userDTO.email());
         User user = new User();
         user.setUsername(userDTO.username());
         user.setFirstName(userDTO.firstName());
@@ -152,11 +131,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         logger.info(String.format(NEW_USER_PASSWORD, password));
 
         return userRepository.save(user);
-    }
-
-    //@Override
-    public List<User> getUsers() {
-        return userRepository.findAll();
     }
 
     @Override
