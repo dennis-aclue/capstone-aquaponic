@@ -80,10 +80,12 @@ export default function MemberOverview() {
     function completeDeleteAccount() {
         axios.delete(`/user/delete/` + dbId)
             .then(() => {
-                    sessionStorage.removeItem("jwt-token");
                     localStorage.clear();
-                    navigate("/login");
+                    sessionStorage.removeItem("jwt-token");
+                    sessionStorage.removeItem("user");
+                    navigate("/");
                     setIsLoading(false);
+                    window.location.reload();
                 }
             )
             .catch((error) => console.log("Delete user ERROR: " + error))

@@ -7,9 +7,7 @@ const login = (username: string, password: string) => {
     })
         .then((response) => {
                 sessionStorage.setItem('user', JSON.stringify(response.data));
-                //localStorage.setItem('user', JSON.stringify(response.data));
                 if (response.headers.jwttoken) {
-                    localStorage.setItem('jwt-token', JSON.stringify(response.headers.jwttoken));
                     sessionStorage.setItem('jwt-token', JSON.stringify(response.headers.jwttoken));
                 }
                 return response.data;
@@ -17,14 +15,12 @@ const login = (username: string, password: string) => {
         );
 }
 
-
 const logout = () => {
     sessionStorage.removeItem("jwt-token");
-    localStorage.clear();
+    sessionStorage.removeItem("user");
 };
 
 const getCurrentToken = () => {
-    //return JSON.parse(localStorage.getItem('jwt-token') || sessionStorage.getItem('jwt-token')
     return JSON.parse(sessionStorage.getItem('jwt-token') || "null");
 };
 
