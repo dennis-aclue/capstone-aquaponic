@@ -52,6 +52,8 @@ export default function MemberOverview() {
         axios.get('/api/projects/userProjectOverview/' + userId)
             .then((response) => {
                 countProjects = (response.data.length)
+            })
+            .then(() => {
                 setCountProjects(countProjects);
             })
             .catch((error) => console.log("Get all projects ERROR: " + error))

@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class UserController extends ExceptionHandling {
         if (userRepository.findById(dbUserId).isPresent()) {
             return userService.updateUser(userDTO);
         }
-        throw new UserNotFoundException("User not found");
+        throw new UserNotFoundException("User with id " + dbUserId + " not found");
     }
 
     @DeleteMapping("/delete/{dbUserId}")
@@ -93,13 +92,13 @@ public class UserController extends ExceptionHandling {
     }
 
     @GetMapping("/getUserData/{id}")
-    public ResponseEntity<User> getUserData(@PathVariable String id) {
+    public ResponseEntity<User> getUserData(@PathVariable String id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             String username = user.get().getUsername();
             return new ResponseEntity<>(userService.findUserByUsername(String.valueOf(username)), OK);
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with " + id + " not found");
+        throw new UserNotFoundException("User with id " + id + " not found");
     }
 
 }

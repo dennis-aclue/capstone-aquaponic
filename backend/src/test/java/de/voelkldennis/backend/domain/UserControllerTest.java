@@ -236,6 +236,29 @@ class UserControllerTest {
 
     }
 
+    @DirtiesContext
+    @Test
+    @WithMockUser
+    void getUserDataWithNotValidId() throws Exception {
+
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/user/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "username": "user",
+                                    "password": "test_password"
+                                }
+                                """).with(csrf()))
+                .andExpect(status().isOk()).andReturn().getResponse().getHeaders("JwtToken").get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/getUserData/" + "123")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("JwtToken", response)
+                        .with(csrf()))
+                .andExpect(status().is(400));
+
+    }
+
 
     @DirtiesContext
     @Test
@@ -291,7 +314,7 @@ class UserControllerTest {
                                 "lastName": "dto_lastName",
                                 "username": "userDTO",
                                 "email": "dto@test.de"
-                                  }
+                                }
                                 """).with(csrf()))
                 .andExpect(status().is(400));
 
