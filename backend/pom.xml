@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>backend</name>
     <description>backend</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>19</java.version>
         <sonar.organization>dennis-aclue</sonar.organization>
@@ -98,6 +99,7 @@
     </dependencies>
 
     <build>
+        <finalName>aquaponic-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
