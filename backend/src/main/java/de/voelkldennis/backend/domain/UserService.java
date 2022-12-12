@@ -4,11 +4,12 @@ import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.UserNotFoundException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 
 public interface UserService {
 
-    User register(UserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException;
+    User register(UserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException;
 
     User findUserByUsername(String username);
 
@@ -18,6 +19,6 @@ public interface UserService {
 
     User updateUser(UserDTO updateUser) throws UserNotFoundException, EmailExistException, UsernameExistException;
 
-    void resetPassword(String email);
+    void resetPassword(String email) throws MessagingException;
 
 }

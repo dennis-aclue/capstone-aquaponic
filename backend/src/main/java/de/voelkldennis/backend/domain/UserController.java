@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
@@ -66,7 +67,7 @@ public class UserController extends ExceptionHandling {
     public ResponseEntity<User> register(@RequestBody @Valid UserDTO userDTO) throws
             UserNotFoundException,
             EmailExistException,
-            UsernameExistException {
+            UsernameExistException, MessagingException {
         User newUserDTO = userService.register(userDTO);
         return new ResponseEntity<>(newUserDTO, OK);
     }
@@ -87,7 +88,7 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/resetPassword/{email}")
-    public void resetPassword(@PathVariable String email) {
+    public void resetPassword(@PathVariable String email) throws MessagingException {
         userService.resetPassword(email);
     }
 

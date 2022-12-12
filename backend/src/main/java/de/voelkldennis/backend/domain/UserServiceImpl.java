@@ -3,8 +3,6 @@ package de.voelkldennis.backend.domain;
 import de.voelkldennis.backend.ProjectUtils;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.MessagingException;
 import java.util.Date;
 
 import static de.voelkldennis.backend.domain.Role.ROLE_SUPER_ADMIN;
@@ -25,10 +24,21 @@ import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
 @Transactional
 @Qualifier("userDetailsService")
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ProjectUtils projectUtils;
+    private final EmailService emailService;
+
+    @Autowired
+    public UserServiceImpl(
+            UserRepository userRepository,
+            BCryptPasswordEncoder passwordEncoder,
+            ProjectUtils projectUtils) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.projectUtils = projectUtils;
+        this.emailService = new EmailService();
+    }
 
     private String getTemporaryProfileImageUrl(String username) {
         return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + username).toUriString();
@@ -60,16 +70,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    @Autowired
-    public UserServiceImpl(
-            UserRepository userRepository,
-            BCryptPasswordEncoder passwordEncoder,
-            ProjectUtils projectUtils) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.projectUtils = projectUtils;
-    }
-
     @Override
     public User updateUser(UserDTO updateUser) {
         User toUpdateUser = findUserByUsername(updateUser.username());
@@ -87,12 +87,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     //@Override
-    public void resetPassword(String email) {
+    public void resetPassword(String email) throws MessagingException {
         User user = findUserByEmail(email);
         String password = generatePassword();
         String encodedPassword = encodePassword(password);
         user.setPassword(encodedPassword);
-        logger.info(String.format(PASSWORD_RESET, password));
+        emailService.sendNewPasswordEmail(user.getFirstName(), password, user.getEmail());
         userRepository.save(user);
     }
 
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User register(UserDTO userDTO)
             throws
             UsernameExistException,
-            EmailExistException {
+            EmailExistException, MessagingException {
         validateNewUsernameAndEmail(userDTO.username(), userDTO.email());
         User user = new User();
         user.setUsername(userDTO.username());
@@ -128,8 +128,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRole(ROLE_SUPER_ADMIN.name());
         user.setAuthorities(ROLE_SUPER_ADMIN.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(userDTO.username()));
-        logger.info(String.format(NEW_USER_PASSWORD, password));
-
+        emailService.sendNewPasswordEmail(userDTO.firstName(), password, userDTO.email());
         return userRepository.save(user);
     }
 
