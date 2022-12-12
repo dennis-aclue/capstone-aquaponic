@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import authService from "../auth.service";
 
 export default function MemberOverview() {
 
-    const [dbId, setDbId] = useState("");
-    const [, setUserId] = useState("");
+    const [dbId, setDbId] = useState();
+    const [userId, setUserId] = useState();
     const [startEditing, setStartEditing] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
@@ -21,28 +20,17 @@ export default function MemberOverview() {
     })
 
     useEffect(() => {
+        let db_Id = (JSON.parse(sessionStorage.getItem('user') || '{}').id);
+        setDbId(db_Id)
+        let user_Id = (JSON.parse(sessionStorage.getItem('user') || '{}').userId);
+        setUserId(user_Id);
 
-        const dbId = (JSON.parse(sessionStorage.getItem('user') || '{}').id);
-        setDbId(dbId);
-
-        axios.get("/user/getUserData/" + dbId)
+        axios.get("/user/getUserData/" + db_Id)
             .then((response) => {
                 localStorage.setItem('user', JSON.stringify(response));
                 setUserData(response.data)
             })
             .catch((error) => console.log("Get user data ERROR: " + error))
-
-        const userId = (JSON.parse(sessionStorage.getItem('user') || '{}').userId);
-        setUserId(userId);
-
-        axios.get('/api/projects/userProjectOverview/' + userId)
-            .then((response) => {
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-                countProjects = (response.data.length)
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-                setCountProjects(countProjects);
-            })
-            .catch((error) => console.log("Get all projects ERROR: " + error))
 
     }, []);
 
@@ -54,18 +42,25 @@ export default function MemberOverview() {
     function updateUser() {
         axios.put("/user/updateUser/" + dbId, userData)
             .then(() => {
-                    setStartEditing(true);
+                setStartEditing(true);
                 }
             )
             .catch((error) => console.log("Update user ERROR: " + error))
     }
 
     function deleteAccount() {
+        axios.get('/api/projects/userProjectOverview/' + userId)
+            .then((response) => {
+                countProjects = (response.data.length)
+                setCountProjects(countProjects);
+            })
+            .catch((error) => console.log("Get all projects ERROR: " + error))
+
         if (countProjects > 0) {
             return (<>
                 "You can't delete your account, because you have {countProjects} open projects! Please delete your
                 projects first!"
-                <button className="popup-inner__element button" onClick={() => setIsLoading(true)}>cancel</button>
+                <button className="popup-inner__element button" onClick={() => setIsLoading(true)}>OK</button>
             </>)
         } else {
             return (<>
@@ -83,7 +78,8 @@ export default function MemberOverview() {
     function completeDeleteAccount() {
         axios.delete(`/user/delete/` + dbId)
             .then(() => {
-                    authService.logout();
+                    sessionStorage.removeItem("jwt-token");
+                    localStorage.clear();
                     navigate("/login");
                     setIsLoading(false);
                 }
