@@ -45,19 +45,18 @@ jobs:
           name: aquaponic-app.war
           path: backend/target/aquaponic-app.war
 
-deploy-aws:
-  runs-on: ubuntu-latest
-  needs: build-backend
-  steps:
-    - uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
-      with:
-        name: aquaponic-app.war
-        path: backend/target
-    - name: Deploy
-      env:
-        TOMCAT_PUBLIC_ADDRESS: ${{ secrets.TOMCAT_PUBLIC_ADDRESS }}
-        TOMCAT_USER: ${{ secrets.TOMCAT_USER }}
-        TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
-      working-directory: backend/target
-      run: curl --verbose --user $TOMCAT_USERPW --upload-file aquaponic-app.war "$TOMCAT_PUBLIC_ADDRESS/manager/text/deploy?path=/&update=true"
+  deploy-aws:
+    runs-on: ubuntu-latest
+    needs: build-backend
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: aquaponic-app.war
+          path: backend/target
+      - name: Deploy
+        env:
+          TOMCAT_PUBLIC_ADDRESS: ${{ secrets.TOMCAT_PUBLIC_ADDRESS }}
+          TOMCAT_USER: ${{ secrets.TOMCAT_USERPW }}
+        working-directory: backend/target
+        run: curl --verbose --user $TOMCAT_USERPW --upload-file aquaponic-app.war "$TOMCAT_PUBLIC_ADDRESS/manager/text/deploy?path=/&update=true"
