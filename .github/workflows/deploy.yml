@@ -1,4 +1,4 @@
-name: Deploy App to AWS_EC2 tomcat
+name: Deploy App to AWS EC2
 
 on:
   push:
@@ -57,6 +57,6 @@ jobs:
       - name: Deploy
         env:
           TOMCAT_PUBLIC_ADDRESS: ${{ secrets.TOMCAT_PUBLIC_ADDRESS }}
-          TOMCAT_USER: ${{ secrets.TOMCAT_USERPW }}
+          TOMCAT_USERPW: ${{ secrets.TOMCAT_USERPW }}
         working-directory: backend/target
         run: curl --verbose --user $TOMCAT_USERPW --upload-file aquaponicApp.war "$TOMCAT_PUBLIC_ADDRESS/manager/text/deploy?path=/&update=true"
