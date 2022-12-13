@@ -3,7 +3,6 @@ package de.voelkldennis.backend.jwt.constant;
 public class EmailConstant {
     public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";
     public static final String USERNAME = "hobby-aquaponic@web.de";
-    public static final String PASSWORD = "1234abcd.!qwertz";
     public static final String FROM_EMAIL = "hobby-aquaponic@web.de";
     public static final String CC_EMAIL = "";
     public static final String EMAIL_SUBJECT = "Hobby Aquaponics, - New Password";

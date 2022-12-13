@@ -3,7 +3,7 @@ package de.voelkldennis.backend.domain;
 import de.voelkldennis.backend.ProjectUtils;
 import de.voelkldennis.backend.exception.domain.EmailExistException;
 import de.voelkldennis.backend.exception.domain.UsernameExistException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,22 +23,12 @@ import static de.voelkldennis.backend.jwt.constant.UserImplConstant.*;
 @Service
 @Transactional
 @Qualifier("userDetailsService")
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ProjectUtils projectUtils;
     private final EmailService emailService;
-
-    @Autowired
-    public UserServiceImpl(
-            UserRepository userRepository,
-            BCryptPasswordEncoder passwordEncoder,
-            ProjectUtils projectUtils) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.projectUtils = projectUtils;
-        this.emailService = new EmailService();
-    }
 
     private String getTemporaryProfileImageUrl(String username) {
         return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + username).toUriString();
