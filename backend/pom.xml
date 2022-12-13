@@ -18,7 +18,8 @@
         <java.version>19</java.version>
         <sonar.organization>dennis-aclue</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.exclusions>**/BackendApplication*.java,**/jwt/**,**/enumeration/UserDTO.java,**/exception/**
+        <sonar.exclusions>
+            **/BackendApplication*.java,**/jwt/**,**/UserDTO*.java,**/exception/**,**/ServletInitializer*.java,**/UserServiceImpl*.java
         </sonar.exclusions>
     </properties>
     <dependencies>
