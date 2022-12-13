@@ -102,7 +102,7 @@ class UserControllerTest {
                         """).with(csrf())).andExpect(status().is(500));
     }
 
-    @DirtiesContext
+/*    @DirtiesContext
     @Test
     @WithMockUser(username = "userDTO")
     void registerReturnOK() {
@@ -124,7 +124,7 @@ class UserControllerTest {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     @DirtiesContext
     @Test
@@ -197,7 +197,7 @@ class UserControllerTest {
 
     }
 
-    @DirtiesContext
+ /*   @DirtiesContext
     @Test
     @WithMockUser
     void resetPassword() throws Exception {
@@ -213,7 +213,7 @@ class UserControllerTest {
                                 """).with(csrf()))
                 .andExpect(status().isOk());
 
-    }
+    }*/
 
     @DirtiesContext
     @Test

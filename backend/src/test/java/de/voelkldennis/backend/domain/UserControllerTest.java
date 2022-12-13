@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.mail.MessagingException;
 import java.util.Date;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -103,7 +104,9 @@ class UserControllerTest {
     @DirtiesContext
     @Test
     @WithMockUser(username = "userDTO")
-    void registerReturnOK() {
+    void registerReturnOK() throws MessagingException {
+
+        EmailService emailService = new EmailService("test");
 
         try {
             mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
@@ -118,6 +121,9 @@ class UserControllerTest {
                              }
                             """
                     ).with(csrf())).andExpect(status().isOk());
+
+            // Here the password send
+
         } catch (Exception e) {
             e.printStackTrace();
         }

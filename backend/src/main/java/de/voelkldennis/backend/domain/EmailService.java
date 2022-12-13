@@ -2,6 +2,8 @@ package de.voelkldennis.backend.domain;
 
 
 import com.sun.mail.smtp.SMTPTransport;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -15,12 +17,19 @@ import static de.voelkldennis.backend.jwt.constant.EmailConstant.*;
 import static javax.mail.Message.RecipientType.CC;
 import static javax.mail.Message.RecipientType.TO;
 
+@Service
 public class EmailService {
+
+    private final String emailPassword;
+
+    public EmailService(@Value(value = "${app.email.secret}") String emailPassword) {
+        this.emailPassword = emailPassword;
+    }
 
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException {
         Message message = createEmail(firstName, password, email);
         SMTPTransport smtpTransport = (SMTPTransport) getEmailSession().getTransport(SIMPLE_MAIL_TRANSFER_PROTOCOL);
-        smtpTransport.connect(SMTP_SERVER, USERNAME, PASSWORD);
+        smtpTransport.connect(SMTP_SERVER, USERNAME, emailPassword);
         smtpTransport.sendMessage(message, message.getAllRecipients());
         smtpTransport.close();
     }
@@ -49,7 +58,7 @@ public class EmailService {
                 new javax.mail.Authenticator() {
                     @Override
                     protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                        return new javax.mail.PasswordAuthentication(USERNAME, PASSWORD);
+                        return new javax.mail.PasswordAuthentication(USERNAME, emailPassword);
                     }
                 });
     }
