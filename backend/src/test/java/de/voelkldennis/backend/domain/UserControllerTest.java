@@ -100,12 +100,14 @@ class UserControllerTest {
                         """).with(csrf())).andExpect(status().is(500));
     }
 
-    /*@DirtiesContext
+   /* @DirtiesContext
     @Test
     @WithMockUser(username = "userDTO")
     void registerReturnOK() throws MessagingException {
 
         EmailService emailService = new EmailService("test");
+        emailService.sendNewPasswordEmail(" ", " ", " ");
+        doNothing().when(emailService).sendNewPasswordEmail(" ", " ", " ");
 
         try {
             mockMvc.perform(MockMvcRequestBuilders.post("/user/register")
