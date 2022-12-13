@@ -11,6 +11,6 @@ public record SecurityConstant() {
     public static final String FORBIDDEN_MESSAGE = "You need to log in to access this page";
     public static final String ACCESS_DENIED_MESSAGE = "You do not have permission to access this page";
     public static final String OPTIONS_HTTP_METHOD = "OPTIONS"; // OPTIONS is the request that the server sends to the client to check if the client is allowed to send the request
-    public static final String[] PUBLIC_URLS = {"/", "/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**", "resetPassword/**"};
+    public static final String[] PUBLIC_URLS = {"/index.html", "/profile", "/static/**", "/", "/user/login/**", "/user/register/**", "/user/image/**", "/api/projects/freeGallery/**", "/api/projects/freeProjectCard/**", "resetPassword/**"};
 
 }
