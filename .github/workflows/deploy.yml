@@ -42,8 +42,8 @@ jobs:
         run: mvn -B package
       - uses: actions/upload-artifact@v2
         with:
-          name: aquaponic-app.war
-          path: backend/target/aquaponic-app.war
+          name: aquaponicApp.war
+          path: backend/target/aquaponicApp.war
 
   deploy-aws:
     runs-on: ubuntu-latest
@@ -52,11 +52,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          name: aquaponic-app.war
+          name: aquaponicApp.war
           path: backend/target
       - name: Deploy
         env:
           TOMCAT_PUBLIC_ADDRESS: ${{ secrets.TOMCAT_PUBLIC_ADDRESS }}
           TOMCAT_USER: ${{ secrets.TOMCAT_USERPW }}
         working-directory: backend/target
-        run: curl --verbose --user $TOMCAT_USERPW --upload-file aquaponic-app.war "$TOMCAT_PUBLIC_ADDRESS/manager/text/deploy?path=/&update=true"
+        run: curl --verbose --user $TOMCAT_USERPW --upload-file aquaponicApp.war "$TOMCAT_PUBLIC_ADDRESS/manager/text/deploy?path=/&update=true"

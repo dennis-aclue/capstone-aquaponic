@@ -105,7 +105,7 @@
     </dependencies>
 
     <build>
-        <finalName>aquaponic-app</finalName>
+        <finalName>aquaponicApp</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
