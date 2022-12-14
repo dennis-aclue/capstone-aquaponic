@@ -10,6 +10,9 @@ import MemberOverview from "./pages/users/MemberOverview";
 import AuthService from "./pages/auth.service";
 import Login from "./pages/users/Login";
 import Registration from "./pages/users/Registration";
+import {Impressum} from "./pages/Impressum";
+import {About} from "./pages/About";
+import {AquaponicInfo} from "./pages/AquaponicInfo";
 
 function App() {
 
@@ -54,6 +57,9 @@ function App() {
                 </>
             }
             <Link to="/freeGallery">Gallery</Link>
+            <Link to="/impressum">Impressum</Link>
+            <Link to="/about">About</Link>
+            <Link to="/aquaponicInfo">AquaponicInfo</Link>
         </nav>
     );
 
@@ -80,6 +86,10 @@ function App() {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/freeGallery" element={<FreeGallery/>}/>
                 <Route path="/freeProjectCard/:projectId" element={<FreeProjectCard/>}/>
+                <Route path="/impressum" element={<Impressum/>}/>
+                <Route path="/about" element={<About/>}/>
+                <Route path="/AquaponicInfo" element={<AquaponicInfo/>}/>
+
                 <Route path="/memberOverview" element={<MemberOverview/>}/>
                 <Route path="/projectOverview" element={<ProjectOverview/>}/>
                 <Route path="/addProject" element={<AddProject/>}/>
