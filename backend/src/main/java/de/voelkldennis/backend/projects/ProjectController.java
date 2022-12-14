@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = {"/", "/api/projects"})
+@RequestMapping(path = {"/api/projects"})
 public class ProjectController {
 
     private final ProjectService projectService;
