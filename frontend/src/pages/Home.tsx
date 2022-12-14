@@ -8,7 +8,7 @@ export default function HomePage() {
             <h1>Welcome everybody!</h1>
         </header>
         <main className="mainPage">
-            <a className="MainLogoLink" href="https://de.vecteezy.com/" target="_blank">
+            <a className="MainLogoLink" href="https://de.vecteezy.com/" rel="noopener noreferrer">
                 <img className="mainLogo" src={process.env.PUBLIC_URL + '/aquaponicMain.jpg'} alt="Aquaponic"/>
             </a>
             <h2>Safe our world resources</h2> <br/>
