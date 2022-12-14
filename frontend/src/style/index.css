@@ -103,3 +103,55 @@ nav a:hover {
     text-decoration: underline;
     color: black;
 }
+
+.impressum p {
+    color: #638e93;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.impressum a {
+    color: #638e93;
+    padding: 0;
+}
+
+.impressum div {
+    color: black;
+    margin: 10px;
+}
+
+.about p {
+    color: #638e93;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.about a {
+    color: #638e93;
+    margin: 0;
+    padding: 0;
+}
+
+.about div {
+    color: black;
+    margin: 10px;
+}
+
+.aquaponicInfo p {
+    color: #638e93;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.aquaponicInfo a {
+    color: #638e93;
+    padding: 0;
+}
+
+.aquaponicInfo div {
+    color: black;
+    margin: 10px;
+}

@@ -25,3 +25,35 @@ Here you can see my first draw of the project principles:
 If you close the IDE during running backend and did not close properly, try this on mac:
 ~ % lsof -n -i4TCP:8080
 ~ % kill -9 PID
+
+Tomcat installation procedure:
+https://github.com/bartfastiel/spring-boot-tomcat-deployment/blob/main/provisioning.sh
+
+FOR AWS setup:
+You do not need to insert iptables then:
+(
+
+# redirect port 8080 to port 80 (both locally and for remote requests)
+
+sudo iptables -t nat -p tcp --dport 80 -j REDIRECT --to-ports 8080 -I OUTPUT -d 127.0.0.1
+sudo iptables -t nat -p tcp --dport 80 -j REDIRECT --to-ports 8080 -I PREROUTING
+)
+
+Tomcat configuration on AWS:
+
+change Tomcat port to 80 inside
+
+- /opt/webserver/apache-tomcat-9.0.70/conf/server.xml
+
+  <Connector port="80" protocol="HTTP/1.1"
+  connectionTimeout="20000"
+  redirectPort="443" />
+
+add .bash_profile constants under export PATH (ec2-user path and maybe root path also):
+export MONGODB_URI={your mongodb uri}
+export EMAIL_SECRET={your email secret}
+export JAVA_HOME=/opt/webserver/jdk-19
+
+
+
+
