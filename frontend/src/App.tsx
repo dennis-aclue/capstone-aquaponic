@@ -22,7 +22,7 @@ function App() {
 
     useEffect(() => {
         const token = AuthService.getCurrentToken();
-        console.log("Token: " + token);
+        //console.log("Token: " + token);
         if (token) {
             setCurrentUserToken(token);
         }

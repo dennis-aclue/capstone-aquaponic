@@ -8,6 +8,8 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [startEditing, setStartEditing] = useState(true);
+    const [errorMessageStatus, setErrorMessageStatus] = useState('');
+    const [passwordShown, setPasswordShown] = useState(false);
 
     const navigate = useNavigate();
 
@@ -20,7 +22,7 @@ const Login = () => {
                     window.location.reload();
                 },
                 (error) => {
-                    console.log("Login Error", error);
+                    setErrorMessageStatus('Username or password is wrong')
                 }
             );
         } catch (err) {
@@ -33,6 +35,10 @@ const Login = () => {
         setStartEditing(true)
         navigate("/login")
     }
+
+    const togglePassword = () => {
+        setPasswordShown(!passwordShown);
+    };
 
     return (
         <div className="flexColumnCenter">
@@ -56,24 +62,29 @@ const Login = () => {
                     name="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                />
+                    required/>
                 <label className="formFieldLabel" htmlFor={"password"}>
                     Password:
                 </label>
                 <input
-                    type="text"
+                    type={passwordShown ? "text" : "password"}
                     id="password"
                     className="formFieldInputPassword"
                     placeholder="Enter your password"
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <p>
+                    required/>
+                <div className="errorMessage">
+                    {errorMessageStatus && <div className="errorMessage">{errorMessageStatus}</div>}
+                </div>
+                <p className="addProjectButton">
                     <button type="submit">Log in</button>
                 </p>
             </form>
+            <p>
+                <button onClick={togglePassword}>Show Password</button>
+            </p>
 
             <Link onClick={() => setStartEditing(false)} to={"#"}>Forgot password ?</Link>
 
@@ -97,7 +108,7 @@ const Login = () => {
                                 name="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                            />
+                                required/>
                         </form>
                         <button className="popup-inner__element button" onClick={() => setStartEditing(true)}>cancel
                         </button>
