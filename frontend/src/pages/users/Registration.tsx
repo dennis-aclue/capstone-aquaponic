@@ -7,6 +7,7 @@ export default function Registration() {
     const navigate = useNavigate();
     const registrationUrl = '/user/register';
     const [messageStatus, setMessageStatus] = useState('')
+    const [errorMessageStatus, setErrorMessageStatus] = useState('')
     const [isLoading, setIsLoading] = useState(false);
 
     const setBackToHome = () => {
@@ -28,12 +29,18 @@ export default function Registration() {
     function postNewUser(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         axios.post(registrationUrl, newUser)
-            .then(function (response) {
+            .then(function () {
                 setIsLoading(true)
+                setErrorMessageStatus('')
                 setMessageStatus(' New username: ' + newUser.username + ', successfully created. Please check you eMail for further instructions.');
+                setTimeout(() => {
+                        setBackToHome()
+                    }
+                    , 4000)
             })
-            .then(() => setTimeout(() => setBackToHome(), 4000))
-            .catch((e) => console.log("POST ERROR: " + e))
+            .catch(function (error) {
+                setErrorMessageStatus('Username or email already exists')
+            })
     }
 
     function handleChange(event: any) {
@@ -52,6 +59,7 @@ export default function Registration() {
             <Link to="/">Home</Link>
             <Link to="/freeGallery">Gallery</Link>
         </nav>
+        {errorMessageStatus !== '' && <p className="errorMessage">{errorMessageStatus}</p>}
         <form className="addProjectForm" onSubmit={postNewUser}>
             {!isLoading && <>
                 <label className="formFieldLabel" htmlFor={"firstName"}>
@@ -65,7 +73,7 @@ export default function Registration() {
                     name="firstName"
                     value={newUser.firstName}
                     onChange={handleChange}
-                />
+                    required/>
             </>
             }
             {!isLoading && <>
@@ -80,7 +88,7 @@ export default function Registration() {
                     name="lastName"
                     value={newUser.lastName}
                     onChange={handleChange}
-                />
+                    required/>
             </>
             }
             {!isLoading && <>
@@ -95,7 +103,7 @@ export default function Registration() {
                     name="username"
                     value={newUser.username}
                     onChange={handleChange}
-                />
+                    required/>
             </>
             }
             {!isLoading && <>
@@ -110,7 +118,7 @@ export default function Registration() {
                     name="email"
                     value={newUser.email}
                     onChange={handleChange}
-                />
+                    required/>
             </>
             }
             {!isLoading && <>
@@ -126,6 +134,9 @@ export default function Registration() {
                 I'm already member
             </Link>
         }
-        {messageStatus && <p>{messageStatus}</p>}
+        <div>
+            {messageStatus !== '' && <p className="successMessage">{messageStatus}</p>}
+        </div>
+
     </div>
 }
